@@ -5,6 +5,7 @@ import { Locate, Send } from 'lucide-react'
 import { CameraCapture } from './CameraCapture'
 import { ClassificationResult } from './ClassificationResult'
 import { submitReport } from '@/lib/api'
+import { fileToCompressedDataUrl } from '@/lib/image'
 import { useSendaStore } from '@/lib/store'
 import type { MapFeature, ReportKind } from '@/lib/types'
 
@@ -86,6 +87,14 @@ export function ReportSheet({ onSubmitted }: { onSubmitted?: (feature: MapFeatur
     event.preventDefault()
     setSending(true)
     try {
+      let photoDataUrl: string | undefined
+      if (image) {
+        try {
+          photoDataUrl = await fileToCompressedDataUrl(image)
+        } catch {
+          // si la imagen no se puede procesar, se envía el reporte sin foto
+        }
+      }
       const feature = await submitReport({
         image,
         voice_text: voiceText,
@@ -93,6 +102,7 @@ export function ReportSheet({ onSubmitted }: { onSubmitted?: (feature: MapFeatur
         lng: Number(lng),
         kind: reportKind,
         subtipo: resolvedSubtipo,
+        photo_data_url: photoDataUrl,
       })
       addLiveFeature(feature)
       if (onSubmitted) {

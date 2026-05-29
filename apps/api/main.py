@@ -81,6 +81,7 @@ async def report(
     lng: Annotated[float, Form()] = -117.0382,
     kind: Annotated[FeatureKind, Form()] = "barrier",
     subtipo: Annotated[str | None, Form()] = None,
+    photo_data_url: Annotated[str | None, Form()] = None,
 ) -> MapFeature:
     if image is not None:
         await image.close()
@@ -97,7 +98,7 @@ async def report(
         geometry=None,
         source="ciudadano",
         confidence=0.7,
-        photo_url=None,
+        photo_url=photo_data_url or None,
         status="activo",
         upvotes=0,
         created_at=datetime.now(timezone.utc),

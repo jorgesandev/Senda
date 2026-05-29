@@ -142,6 +142,7 @@ export async function submitReport(input: {
   lng: number
   kind: ReportKind
   subtipo?: string
+  photo_data_url?: string
 }): Promise<MapFeature> {
   const form = new FormData()
   form.append('lat', String(input.lat))
@@ -150,6 +151,7 @@ export async function submitReport(input: {
   if (input.voice_text) form.append('voice_text', input.voice_text)
   if (input.subtipo) form.append('subtipo', input.subtipo)
   if (input.image) form.append('image', input.image)
+  if (input.photo_data_url) form.append('photo_data_url', input.photo_data_url)
 
   const response = await fetch(`${API_BASE_URL}/report`, { method: 'POST', body: form })
   if (!response.ok) {
