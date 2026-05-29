@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { TJ_CENTER, featureColor, featureIcon, featureLabel } from '@/lib/map'
 import { useSendaStore } from '@/lib/store'
 import type { MapFeature, MapViewState, RouteResponse } from '@/lib/types'
+import { FeatureDetailSheet } from './FeatureDetailSheet'
 
 type GoogleApi = typeof globalThis.google
 
@@ -94,6 +95,7 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
   const markerRefs = useRef<google.maps.Marker[]>([])
   const [googleApi, setGoogleApi] = useState<GoogleApi | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
+  const [selectedFeature, setSelectedFeature] = useState<MapFeature | null>(null)
   const activeRoute = useSendaStore((store) => store.activeRoute)
   const previewRoute = useSendaStore((store) => store.previewRoute)
   const liveFeatures = useSendaStore((store) => store.liveFeatures)
@@ -179,7 +181,7 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
     markerRefs.current.forEach((marker) => marker.setMap(null))
     markerRefs.current = visibleFeatures.map((feature) => {
       const color = featureColor(feature, profiles)
-      return new google.maps.Marker({
+      const marker = new google.maps.Marker({
         map,
         position: { lat: feature.lat, lng: feature.lng },
         title: featureLabel(feature),
@@ -199,6 +201,8 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
         },
         zIndex: 30
       })
+      marker.addListener('click', () => setSelectedFeature(feature))
+      return marker
     })
 
     if (routeToDraw && path.length > 0) {
@@ -268,6 +272,14 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
     return () => window.removeEventListener('senda:center-map', handleCenterMap)
   }, [googleApi])
 
+  useEffect(() => {
+    const map = mapRef.current
+    const google = googleApi
+    if (!map || !google) return
+    const listener = map.addListener('click', () => setSelectedFeature(null))
+    return () => listener.remove()
+  }, [googleApi])
+
   return (
     <section className="relative h-full min-h-[540px] overflow-hidden bg-map" aria-label="Mapa accesible de Senda">
       <div ref={containerRef} className="absolute inset-0" role="application" aria-label="Mapa interactivo de Tijuana" />
@@ -282,6 +294,9 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
         <span>T Transporte</span>
         <span>C Cruce</span>
       </div>
+      {selectedFeature ? (
+        <FeatureDetailSheet feature={selectedFeature} onClose={() => setSelectedFeature(null)} />
+      ) : null}
     </section>
   )
 }
