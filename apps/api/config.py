@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     vertex_location: str = ""
     firebase_project_id: str = ""
     firebase_credentials_json: str = ""
+    gemini_api_key: str = ""
     valhalla_url: str = "http://localhost:8002"
     vision_backend: Literal["gemini", "self_hosted_vlm"] = "gemini"
     vlm_endpoint: str = ""

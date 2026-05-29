@@ -6,7 +6,7 @@ import httpx
 
 from config import settings
 
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 
 _TRANSLATION_PROMPT = """Traduce las siguientes instrucciones de navegación peatonal del inglés al español de México. Mantén los nombres de calles sin traducir. Responde ÚNICAMENTE con un JSON array de strings, en el mismo orden y misma cantidad de elementos que el input.
 
@@ -21,7 +21,7 @@ async def translate_steps(steps: list[str]) -> list[str]:
     if not steps:
         return steps
 
-    api_key = settings.google_maps_api_key
+    api_key = settings.gemini_api_key or settings.google_maps_api_key
     if not api_key:
         # Fallback: return steps as-is if no API key configured
         return steps
@@ -42,6 +42,7 @@ async def translate_steps(steps: list[str]) -> list[str]:
                 "type": "array",
                 "items": {"type": "string"},
             },
+            "thinkingConfig": {"thinkingBudget": 0},
         },
     }
 

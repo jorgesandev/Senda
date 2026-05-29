@@ -165,7 +165,7 @@ def build_dynamic_excludes(
     return excludes, evitadas
 
 
-ON_ROUTE_THRESHOLD_M = 60
+ON_ROUTE_THRESHOLD_M = 120
 
 
 def build_amenities_on_route(
