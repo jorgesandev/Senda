@@ -8,6 +8,10 @@ import { VoiceController } from './VoiceController'
 
 type LocateState = 'idle' | 'loading' | 'ok' | 'error'
 
+interface MapFloatingControlsProps {
+  onReportClick?: () => void
+}
+
 function controlButtonClass(active = false) {
   return `touch-target grid h-14 w-14 place-items-center rounded-full border shadow-[0_10px_26px_rgba(15,23,42,0.24)] transition focus-visible:outline ${
     active
@@ -19,7 +23,7 @@ function controlButtonClass(active = false) {
 const reportButtonClass =
   'touch-target grid h-14 w-14 place-items-center rounded-full border border-brand bg-brand text-white shadow-[0_10px_26px_rgba(15,23,42,0.24)] transition hover:brightness-95 focus-visible:outline'
 
-export function MapFloatingControls() {
+export function MapFloatingControls({ onReportClick }: MapFloatingControlsProps) {
   const [locateState, setLocateState] = useState<LocateState>('idle')
   const [showA11y, setShowA11y] = useState(false)
 
@@ -69,9 +73,15 @@ export function MapFloatingControls() {
         className="!h-14 !w-14 border border-white/80 shadow-[0_10px_26px_rgba(15,23,42,0.24)]"
       />
 
-      <Link href="/report" className={reportButtonClass} aria-label="Reportar barrera">
-        <Plus aria-hidden="true" size={24} />
-      </Link>
+      {onReportClick ? (
+        <button type="button" className={reportButtonClass} aria-label="Reportar barrera" onClick={onReportClick}>
+          <Plus aria-hidden="true" size={24} />
+        </button>
+      ) : (
+        <Link href="/report" className={reportButtonClass} aria-label="Reportar barrera">
+          <Plus aria-hidden="true" size={24} />
+        </Link>
+      )}
 
       <button
         type="button"

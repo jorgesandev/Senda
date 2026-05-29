@@ -85,7 +85,7 @@ Usuario abre el mapa → deja origen en "Mi ubicación" o lo edita → escribe d
   → Valhalla route con exclude_locations para barreras B
   → mapa dibuja ruta + markers → bottom sheet resume ruta/pasos/barreras → TTS narra resultado
 
-Ciudadano reporta barrera (foto + GPS)
+Ciudadano reporta barrera desde el sheet sobre el mapa o desde `/report` (foto + GPS)
   → POST /report → Firestore → SSE broadcast
   → haversine <80m de ruta activa + efecto=B
   → rerouteIfNeeded → vibración háptica + banner visual + LiveRerouteToast

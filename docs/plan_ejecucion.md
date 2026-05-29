@@ -9,8 +9,8 @@ Marca cada casilla al terminar. Numeración `bloque.subtarea`.
   Nota: se reorganizó `apps/web/app/map/page.tsx` para dejar el mapa como superficie dominante; se compactó `apps/web/components/RoutePlanner.tsx` con destino principal, origen colapsable, chips de perfil y `VoiceController` integrado; se ajustaron `apps/web/components/VoiceController.tsx` y `apps/web/components/MapView.tsx` para soportar el nuevo shell sin cambiar ruteo, matriz, SSE, TTS, haptics ni reportes.
 - [x] **P.2** Fase 3 — Bottom sheet de ruta real.
   Nota: `apps/web/components/RouteResultCard.tsx` ahora es un bottom sheet colapsable/expandible con resumen fijo, tabs `Resumen`/`Pasos`/`Barreras`, scroll interno estable y métricas compactas. Se mantuvo TTS automático, botón "Leer" y `StepList` sin cambiar API ni matriz. `apps/web/app/map/page.tsx` posiciona el sheet en la parte inferior del mapa.
-- [ ] **P.3** Fase 4 — Reporte sobre el mapa.
-  Nota: integrar `ReportSheet` como modal/sheet sobre `/map` disparado desde el FAB de reportar, reutilizando `KindSelector`, `CameraCapture` y flujo actual de `POST /report`; dejar `/report` como fallback/deep link. No agregar Gemini ni cambiar backend en esta fase.
+- [x] **P.3** Fase 4 — Reporte sobre el mapa.
+  Nota: se agregó `apps/web/components/MapReportSheet.tsx` como `dialog`/sheet sobre `/map`, disparado desde `MapFloatingControls`. Reutiliza `KindSelector`, `ReportSheet`, `CameraCapture` y el flujo actual `POST /report` sin tocar backend ni Gemini. `/report` queda como fallback/deep link.
 - [x] **P.4** Fase 5 — Controles flotantes consistentes.
   Nota: se creó `apps/web/components/MapFloatingControls.tsx` con controles flotantes para centrar en mi ubicación, voz/micrófono, reportar y accesibilidad. `apps/web/components/MapView.tsx` escucha el evento `senda:center-map` para pan/zoom y marker de ubicación. `RoutePlanner` quedó sin mic/accesibilidad duplicados. Reportar sigue navegando a `/report`; la Fase 4 queda pendiente.
 - [ ] **P.5** Fase 6 — QA demo UI/UX.

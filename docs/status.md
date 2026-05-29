@@ -6,7 +6,7 @@
 
 ## Última actualización
 
-**2026-05-29** — Polish UI/UX Fases 1, 2, 3 y 5 aplicadas; `Mi ubicación` usa GPS real con fallback a Centro. Fase 4 y QA demo pendientes antes de Bloque 5.
+**2026-05-29** — Polish UI/UX Fases 1-5 aplicadas; `Mi ubicación` usa GPS real con fallback a Centro. QA demo pendiente antes de Bloque 5.
 
 ---
 
@@ -54,6 +54,7 @@ Ver `docs/plan_ejecucion.md` para detalle de tareas.
 - In-memory store sincronizado para reads rápidos
 - `GET /features/stream` SSE: eventos `initial` / `ready` / `new_feature`
 - `POST /report` crea features y las propaga via SSE
+- En `/map`, el botón reportar abre `ReportSheet` como sheet/modal sobre el mapa; `/report` sigue como fallback
 - Fallback in-memory silencioso si Firestore falla
 
 ### Citizen Loop
@@ -85,7 +86,7 @@ Ver `docs/plan_ejecucion.md` para detalle de tareas.
 
 | Bloque | Qué | Prioridad |
 |---|---|---|
-| Polish UI/UX P.3/P.5 | Reporte sobre mapa y QA demo | P0 demo |
+| Polish UI/UX P.5 | QA demo mobile/desktop antes de Bloque 5 | P0 demo |
 | 5 | Visión Gemini: clasificar fotos de reportes | P1 |
 | 9 | Deploy final: Lighthouse a11y=100, slide research campo, README limpio | P0 pitch |
 | 4.7 | Demo a ciegas en vivo (operación por voz+haptic con ojos cerrados) | P0 pitch |
