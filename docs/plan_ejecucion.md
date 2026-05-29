@@ -1,0 +1,101 @@
+# Plan de Ejecución — Senda (solo dev)
+
+**Meta:** versión insana del SRS v2, asegurando el MVP primero e ir agregando upside.
+Marca cada casilla al terminar. Numeración `bloque.subtarea`.
+---
+
+## Bloque 0 · Setup y accesos *(haz esto primero, sin código)*
+- [ ] **0.1** Front vivo con mocks: `cd apps/web && bun install && bun dev` → abre `localhost:3000`, confirma que navega. Tu baseline.
+- [ ] **0.2** API viva: `cd apps/api && pip install -r requirements.txt && uvicorn main:app --reload` → `GET /health` responde ok.
+- [ ] **0.3** Proyecto Google Cloud: console.cloud.google.com → nuevo proyecto `senda`. Anota el **Project ID**.
+- [ ] **0.4** Redime los **créditos de Google Cloud** del evento en Billing y ligalos al proyecto.
+- [ ] **0.5** Habilita APIs (APIs & Services → Enable): **Geocoding**, **Map Tiles/Maps JS**, **Street View Static**, **Vertex AI**.
+- [ ] **0.6** Llaves: crea una **API key** (Maps/Geocoding/Street View) y restríngela. Para visión, lo más rápido es una **API key de Gemini** en aistudio.google.com → "Get API key".
+- [ ] **0.7** **Verifica la cuota de Street View Static** (consola → Quotas) — es tu cuello de botella. Estima cuántas imágenes te alcanzan. Esto es de la hora 1.
+- [ ] **0.8** Firebase: console.firebase.google.com → agrega proyecto (liga al mismo GCP) → crea **Firestore** (modo test para el hackathon) → Project settings → Service accounts → **genera la llave JSON**.
+- [ ] **0.9** Llena los `.env` (web y api) desde `infra/.env.example`: llaves, `NEXT_PUBLIC_API_URL=http://localhost:8080`, y un `NEXT_PUBLIC_MAP_STYLE_URL` de un estilo MapLibre oscuro (ej. estilo dark de demotiles/MapTiler).
+- [ ] **0.10** `git init`, repo **público** en GitHub, commit `chore: scaffold verificado`.
+
+## Bloque 1 · Valhalla real con Tijuana *(peldaño 1 — mata el riesgo #1)*
+- [ ] **1.1** PBF de Tijuana. **Rápido:** extract.bbbike.org → formato PBF → dibuja caja sobre TJ → te llega el link. **Alterno:** baja México de Geofabrik y recorta: `osmium extract --bbox -117.13,32.40,-116.85,32.57 mexico-latest.osm.pbf -o tijuana.osm.pbf`.
+- [ ] **1.2** Coloca `tijuana.osm.pbf` en la carpeta montada `custom_files/` del servicio valhalla.
+- [ ] **1.3** Levanta: `docker compose -f services/valhalla/docker-compose.yml up`. El **primer arranque construye los tiles** (tarda unos minutos); espera el log de "tiles built". Sirve en `:8002`.
+- [ ] **1.4** Smoke test: `curl` a `localhost:8002/route` con dos coords de TJ y costing `pedestrian` → debe regresar un trip con shape.
+- [ ] **1.5** Implementa `routing.py`: arma el request a `VALHALLA_URL` con costing pedestrian, **decodifica el shape (polyline6)** a `[[lng,lat]...]`, mapea a `distance_m`/`eta_min`/`steps`. Quita el `NotImplementedError`.
+- [ ] **1.6** Conecta `/route` en `main.py` a `routing.py` (quita el mock).
+- [ ] **1.7** Geocoding en `geo.py`: implementa `geocode(texto)→lat/lng` con Google Geocoding. `LocationInput` lo consume.
+- [ ] **1.8** Apunta el front al API real (`api.ts` usa `NEXT_PUBLIC_API_URL`) y que `MapView` dibuje los coords devueltos.
+- [ ] **1.9** E2E: escribe un destino en TJ, busca ruta, ve la **línea real esquina a esquina**.
+- [ ] **1.10** Commit `feat: ruteo valhalla real`.
+
+## Bloque 2 · Matriz viva en el ruteo *(peldaños 2 y 4)*
+- [ ] **2.1** Confirma `matrix.py`: `python -c "import matrix; print(matrix.resolve_effect(['WHEELCHAIR'], {'kind':'barrier','subtipo':'surface_broken','atributos':{}}))"` → `B`.
+- [ ] **2.2** Siembra barreras reales que viste en Revolución/Centro en `data/seed/features_seed.json` con lat/lng reales (escalones, rampas mal hechas, banqueta rota).
+- [ ] **2.3** Carga el seed a Firestore (o memoria) al iniciar la API.
+- [ ] **2.4** Conecta matriz↔ruteo en `routing.py`: antes de rutear, consulta features del bbox, resuelve efecto por los `profiles[]` del request (**peor-caso**), y pásalos a Valhalla. Pragmático en caliente: **B y D → `exclude_locations`** (evítalos), L → ignora. El matiz fino va en el horneado (si te alcanza).
+- [ ] **2.5** Pasa `profiles[]` del front al `/route` (ProfileSelector → store → `api.ts`).
+- [ ] **2.6** Verifica: cambia `WHEELCHAIR`↔`BLIND` → **la ruta cambia visiblemente** esquivando features según la matriz.
+- [ ] **2.7** Pinta features en el mapa (`FeatureMarker`) por kind/severidad, **icono + color** (nunca solo color).
+- [ ] **2.8** Commit `feat: matriz por perfil afecta ruta`.
+
+## Bloque 3 · Capa viva + Citizen Loop *(peldaño 3 — la estrella)*
+- [ ] **3.1** Conecta Firestore en `features.py` con `firebase-admin` (service account JSON): CRUD de `MapFeature` + export GeoJSON en `/features`.
+- [ ] **3.2** Implementa `POST /report`: recibe imagen/voz + lat/lng + kind → guarda feature (`status: activo`) → regresa el `MapFeature`.
+- [ ] **3.3** Tiempo real en el front: el store escucha Firestore (`onSnapshot`) → `liveFeatures` se actualiza → el marker **aparece al instante**.
+- [ ] **3.4** ReportSheet + KindSelector + CameraCapture: capturar/seleccionar, ubicar con GPS, enviar.
+- [ ] **3.5** **Citizen Loop:** al reportar sobre la ruta activa → recalcula `/route` (la feature nueva entra como exclude) → segmento se marca `--route-blocked` → **ruta alterna inmediata**; `LiveRerouteToast` avisa.
+- [ ] **3.6** Verifica el momento "wow" en vivo.
+- [ ] **3.7** *Fallback:* si Firestore da fricción, usa store in-memory/JSON — no sacrifiques el loop por la DB.
+- [ ] **3.8** Commit `feat: citizen loop en vivo`.
+
+## Bloque 4 · Accesibilidad total *(peldaño 5 — tu diferenciador)* 🏁
+- [ ] **4.1** `voice.ts`: `SpeechRecognition` en es-MX → comandos ("buscar ruta a…", "reportar barrera"). `VoiceController` mapea comandos → acciones del store.
+- [ ] **4.2** Narrator: `speechSynthesis` lee indicaciones de `StepList` y mensajes; botón leer/silenciar.
+- [ ] **4.3** Háptica: `haptics.ts` con Vibration API → patrón precaución (corta intermitente) vs bloqueo (larga). Dispara al acercarse a una feature en navegación.
+- [ ] **4.4** Alertas **siempre visuales** (para sordos) + toggle solo-vibración.
+- [ ] **4.5** `AccessibilityControls`: alto contraste (`data-contrast="high"`) + tamaño de texto; persiste en store.
+- [ ] **4.6** ARIA pass: labels/roles en interactivos, foco visible, targets 48px. Pruébalo con VoiceOver/TalkBack.
+- [ ] **4.7** **Demo a ciegas:** opera Senda completa por voz + vibración con los ojos cerrados.
+- [ ] **4.8** Commit `feat: MVP completo — app accesible`. **🏁 MVP GANADOR ASEGURADO.**
+- [ ] **4.9** Pausa 10-15 min (agua + comida). Está en el plan a propósito: tu juicio es el recurso que se agota, no las horas.
+
+## Bloque 5 · Visión real *(P1)*
+- [ ] **5.1** `vision.py` con Gemini Flash: imagen + prompt ("eres urbanista inclusivo, identifica subtipo y severidad 1-5 para silla de ruedas") → parsea JSON → autollena `MapFeature`.
+- [ ] **5.2** Conéctalo a `POST /report`: foto → clasifica → tipo/atributos/confidence prellenados y **editables** en `ClassificationResult`.
+- [ ] **5.3** Reporte por voz: `voice_text` → Gemini extrae tipo + referencia → geolocaliza con GPS.
+- [ ] **5.4** Umbral de confianza: `confidence` bajo → `status: no_confirmado`.
+- [ ] **5.5** Verifica: foto de barrera real → reporte autollenado.
+- [ ] **5.6** Commit `feat: visión gemini`.
+- [ ] **5.7** *(Paralelización)* Con visión lista, **lanza el scan en background** (Bloque 8) sobre una zona amplia: la máquina trabaja mientras tú sigues. Tu "segundo dev".
+
+## Bloque 6 · Extras P1 enchufables *(independientes; mete los que alcances)*
+- [ ] **6.1** Auto-preferencias: `preferences.ts` detecta `prefers-contrast`/`reduced-motion`/`color-scheme` → aplica al cargar.
+- [ ] **6.2** PWA offline: `sw.js` cachea el shell; manifest instalable; prueba en modo avión.
+- [ ] **6.3** Brújula: `compass.ts` (DeviceOrientation) → `CompassGuide` "apunta a tu destino" + vibración. *(iOS pide permiso explícito.)*
+- [ ] **6.4** Amenidades: sembrar y reportar (acceso/alivio/guía/servicio); markers positivos.
+- [ ] **6.5** Transporte: carga `transport_seed.json` (2-3 rutas reales de TJ con `accessibility_features`); score por perfil; muéstralas.
+- [ ] **6.6** Cruces: features `kind: crossing` con atributos (`tiene_audio`, `rampas_esquina`…); derivan barrera/amenidad por perfil.
+- [ ] **6.7** Commit por cada extra terminado.
+
+## Bloque 7 · Tablero de gobierno *(P2 — el cierre del pitch)*
+- [ ] **7.1** `gov/page.tsx`: `GovHeatmap` con densidad de features (heatmap MapLibre).
+- [ ] **7.2** `PrioritizationTable`: por segmento/zona, `score = trayectos_desbloqueados / costo_estimado`, orden descendente.
+- [ ] **7.3** Endpoint de agregación: BigQuery si vas sobrado, o agregación simple sobre Firestore.
+- [ ] **7.4** `ExportButton`: GeoJSON/CSV — el entregable abierto para gobierno.
+- [ ] **7.5** Commit `feat: tablero de priorización`.
+
+## Bloque 8 · Cosecha del scan *(si lo lanzaste)*
+- [ ] **8.1** Implementa `services/scan`: `fetch_streetview` (red OSM → puntos → imágenes), `detect` (Gemini/VLM → features), `enrich_osm` (tags), `build_tiles.sh`.
+- [ ] **8.2** Foldea resultados: carga features detectadas a Firestore / rehornea tiles.
+- [ ] **8.3** Heatmap de cobertura (lo disperso se lee como "escalando", no roto).
+- [ ] **8.4** Commit `feat: scan cosechado`.
+
+## Bloque 9 · Pitch & demo *(RESÉRVALO — no lo dejes apurado)*
+- [ ] **9.1** Deploy web a Vercel: conecta el repo en vercel.com, set env vars, build con Bun → URL en vivo.
+- [ ] **9.2** Deploy API a Cloud Run: `gcloud run deploy` con el Docker; set env; apunta el front a esa URL. *(Si se complica, local está bien para el demo.)*
+- [ ] **9.3** Valhalla: VM en GCP con docker + tiles montados, o déjalo local para el demo si no alcanza el tiempo.
+- [ ] **9.4** **Lighthouse a11y**: Chrome DevTools → Lighthouse → Accessibility → captura el **100** → ponlo en slide.
+- [ ] **9.5** **Slide 1 = research de Revolución**: foto con usuarios reales + 2-3 frases de las entrevistas. Tu gancho de Impacto Social (30%).
+- [ ] **9.6** Guion de demo (apóyate en el video de Bernardo): perfil → ruta → reporte → reruteo → **demo a ciegas** → tablero gobierno. Ensaya el timing (3 min).
+- [ ] **9.7** README + repo limpio: arquitectura, cómo correr, **créditos a Bernardo (co-ideación y research de campo)**, licencia MIT.
+- [ ] **9.8** **Congela el código** y entrega en la plataforma antes de las 11:59 del viernes.
