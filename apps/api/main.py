@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
 from typing import Annotated
 
 import httpx
 from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
+from features import create_feature, list_features_geojson, load_seed
 from models import (
     FeatureKind,
-    GeoJsonFeature,
     GeoJsonFeatureCollection,
     HealthResponse,
     MapFeature,
@@ -31,48 +30,9 @@ app.add_middleware(
 )
 
 
-def mock_feature(
-    feature_id: str = "feat-centro-ramp-001",
-    kind: FeatureKind = "barrier",
-    lat: float = 32.5331,
-    lng: float = -117.0382,
-) -> MapFeature:
-    subtype = "ramp_missing" if kind == "barrier" else "accessible_business"
-    return MapFeature(
-        id=feature_id,
-        kind=kind,
-        categoria="cambio_nivel" if kind == "barrier" else kind,
-        subtipo=subtype,
-        atributos={"mock": True},
-        lat=lat,
-        lng=lng,
-        geometry=None,
-        source="ciudadano",
-        confidence=0.82,
-        photo_url=None,
-        status="activo",
-        upvotes=4,
-        created_at=datetime.now(timezone.utc),
-    )
-
-
-def mock_amenity() -> MapFeature:
-    return MapFeature(
-        id="feat-zona-rio-rest-001",
-        kind="amenity",
-        categoria="alivio",
-        subtipo="rest_point",
-        atributos={"sombra": True, "banca": True},
-        lat=32.5225,
-        lng=-117.0191,
-        geometry=None,
-        source="ciudadano",
-        confidence=0.91,
-        photo_url=None,
-        status="confirmado",
-        upvotes=12,
-        created_at=datetime.now(timezone.utc),
-    )
+@app.on_event("startup")
+async def startup() -> None:
+    load_seed()
 
 
 @app.get("/health", response_model=HealthResponse)
@@ -101,11 +61,29 @@ async def report(
     lng: Annotated[float, Form()] = -117.0382,
     kind: Annotated[FeatureKind, Form()] = "barrier",
 ) -> MapFeature:
+    import uuid
+    from datetime import datetime, timezone
+
     if image is not None:
         await image.close()
-    feature = mock_feature(feature_id=f"report-{kind}-mock", kind=kind, lat=lat, lng=lng)
-    feature.atributos = {"voice_text": voice_text or "", "classified": True}
-    return feature
+
+    feature = MapFeature(
+        id=f"report-{kind}-{uuid.uuid4().hex[:8]}",
+        kind=kind,
+        categoria="obstruccion" if kind == "barrier" else kind,
+        subtipo="obstruction_temporary" if kind == "barrier" else "accessible_business",
+        atributos={"voice_text": voice_text or "", "classified": False},
+        lat=lat,
+        lng=lng,
+        geometry=None,
+        source="ciudadano",
+        confidence=0.6,
+        photo_url=None,
+        status="activo",
+        upvotes=0,
+        created_at=datetime.now(timezone.utc),
+    )
+    return await create_feature(feature)
 
 
 @app.get("/features", response_model=GeoJsonFeatureCollection)
@@ -113,41 +91,16 @@ async def features(
     bbox: Annotated[str | None, Query(description="minLng,minLat,maxLng,maxLat")] = None,
     kind: Annotated[FeatureKind | None, Query()] = None,
 ) -> GeoJsonFeatureCollection:
-    del bbox
-    items = [mock_feature(), mock_amenity()]
-    if kind is not None:
-        items = [item for item in items if item.kind == kind]
-    return GeoJsonFeatureCollection(
-        features=[
-            GeoJsonFeature(
-                geometry={"type": "Point", "coordinates": [item.lng, item.lat]},
-                properties=item.model_dump(mode="json"),
-            )
-            for item in items
-        ]
-    )
+    return await list_features_geojson(bbox, kind)
 
 
 @app.get("/transport", response_model=TransportResponse)
 async def transport(bbox: Annotated[str | None, Query(description="minLng,minLat,maxLng,maxLat")] = None) -> TransportResponse:
-    del bbox
-    return TransportResponse(
-        routes=[
-            MapFeature(
-                id="route-centro-zona-rio",
-                kind="transport",
-                categoria="ruta_camion",
-                subtipo="Centro - Zona Rio",
-                atributos={"accessibility_features": {"has_ramp": True, "low_floor": True}},
-                lat=32.525,
-                lng=-117.025,
-                geometry={"type": "LineString", "coordinates": [[-117.0382, 32.5331], [-117.0191, 32.5225]]},
-                source="ciudadano",
-                confidence=0.8,
-                photo_url=None,
-                status="activo",
-                upvotes=4,
-                created_at=datetime.now(timezone.utc),
-            )
-        ]
-    )
+    from features import get_active_features
+
+    items = get_active_features(kind="transport")
+    if bbox:
+        parts = [float(x) for x in bbox.split(",")]
+        if len(parts) == 4:
+            items = get_active_features((parts[0], parts[1], parts[2], parts[3]), kind="transport")
+    return TransportResponse(routes=items)

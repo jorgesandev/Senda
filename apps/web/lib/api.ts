@@ -142,38 +142,27 @@ export async function submitReport(input: {
   lng: number
   kind: ReportKind
 }): Promise<MapFeature> {
-  void API_BASE_URL
-  void input.image
-  // Production will send multipart report data and receive a classified live feature.
-  return {
-    id: `report-${input.kind}-mock`,
-    kind: input.kind,
-    categoria: input.kind === 'barrier' ? 'obstruccion' : input.kind,
-    subtipo: input.kind === 'barrier' ? 'obstruction_temporary' : 'accessible_business',
-    atributos: { voice_text: input.voice_text ?? '' },
-    lat: input.lat,
-    lng: input.lng,
-    geometry: null,
-    source: 'ciudadano',
-    confidence: 0.76,
-    photo_url: null,
-    status: 'activo',
-    upvotes: 0,
-    created_at: new Date().toISOString()
+  const form = new FormData()
+  form.append('lat', String(input.lat))
+  form.append('lng', String(input.lng))
+  form.append('kind', input.kind)
+  if (input.voice_text) form.append('voice_text', input.voice_text)
+  if (input.image) form.append('image', input.image)
+
+  const response = await fetch(`${API_BASE_URL}/report`, { method: 'POST', body: form })
+  if (!response.ok) {
+    const message = await response.text()
+    throw new Error(message || `Report failed: ${response.status}`)
   }
+  return response.json() as Promise<MapFeature>
 }
 
-export async function getFeatures(): Promise<GeoJsonFeatureCollection> {
-  void API_BASE_URL
-  // Production will GET live features by bounding box and optional kind filter.
-  return {
-    type: 'FeatureCollection',
-    features: MOCK_FEATURES.map((feature) => ({
-      type: 'Feature',
-      geometry: { type: 'Point', coordinates: [feature.lng, feature.lat] },
-      properties: feature
-    }))
-  }
+export async function getFeatures(bbox?: string, kind?: string): Promise<GeoJsonFeatureCollection> {
+  const params = new URLSearchParams()
+  if (bbox) params.set('bbox', bbox)
+  if (kind) params.set('kind', kind)
+  const query = params.toString()
+  return apiJson<GeoJsonFeatureCollection>(`/features${query ? `?${query}` : ''}`)
 }
 
 export async function getTransport(): Promise<TransportResponse> {

@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { MOCK_FEATURES, requestRoute } from './api'
+import { MOCK_FEATURES, getFeatures, requestRoute } from './api'
 import type { A11yPrefs, MapFeature, Profile, RouteResponse, Situational } from './types'
 
 interface SendaState {
@@ -15,6 +15,7 @@ interface SendaState {
   planRoute: (origin: string, destination: string) => Promise<void>
   setActiveRoute: (route: RouteResponse | null) => void
   addLiveFeature: (feature: MapFeature) => void
+  loadLiveFeatures: () => Promise<void>
   setHighContrast: (enabled: boolean) => void
   setTextScale: (scale: A11yPrefs['textScale']) => void
 }
@@ -52,6 +53,15 @@ export const useSendaStore = create<SendaState>((set, get) => ({
   },
   setActiveRoute: (route) => set({ activeRoute: route }),
   addLiveFeature: (feature) => set((state) => ({ liveFeatures: [feature, ...state.liveFeatures] })),
+  loadLiveFeatures: async () => {
+    try {
+      const collection = await getFeatures()
+      const features = collection.features.map((f) => f.properties)
+      set({ liveFeatures: features })
+    } catch {
+      // Keep existing liveFeatures on error (fallback to MOCK_FEATURES)
+    }
+  },
   setHighContrast: (enabled) =>
     set((state) => ({
       a11yPrefs: { ...state.a11yPrefs, highContrast: enabled }

@@ -1,5 +1,8 @@
+'use client'
+
 import { Bus, CircleCheck, Footprints, TriangleAlert } from 'lucide-react'
 import { featureColor, featureLabel } from '@/lib/map'
+import { useSendaStore } from '@/lib/store'
 import type { MapFeature } from '@/lib/types'
 
 const ICONS = {
@@ -10,8 +13,9 @@ const ICONS = {
 }
 
 export function FeatureMarker({ feature }: { feature: MapFeature }) {
+  const profiles = useSendaStore((s) => s.profiles)
   const Icon = ICONS[feature.kind]
-  const color = featureColor(feature)
+  const color = featureColor(feature, profiles)
 
   return (
     <span

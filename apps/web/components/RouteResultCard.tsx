@@ -1,4 +1,5 @@
 import { Clock, Route } from 'lucide-react'
+import { FeatureMarker } from './FeatureMarker'
 import { StepList } from './StepList'
 import type { RouteResponse } from '@/lib/types'
 
@@ -23,14 +24,35 @@ export function RouteResultCard({ route }: { route: RouteResponse }) {
           <dd className="font-semibold">{route.eta_min} min</dd>
         </div>
       </dl>
-      <div className="grid gap-2 text-sm">
-        <p>
-          <strong>{route.features_evitadas.length}</strong> barrera evitada
-        </p>
-        <p>
-          <strong>{route.features_aprovechadas.length}</strong> amenidad aprovechada
-        </p>
-      </div>
+
+      {route.features_evitadas.length > 0 ? (
+        <div className="space-y-1">
+          <p className="text-sm font-bold text-sevHigh">
+            {route.features_evitadas.length} barrera{route.features_evitadas.length !== 1 ? 's' : ''} evitada{route.features_evitadas.length !== 1 ? 's' : ''}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {route.features_evitadas.map((f) => (
+              <FeatureMarker key={f.id} feature={f} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p className="text-sm text-muted">Sin barreras evitadas en esta ruta</p>
+      )}
+
+      {route.features_aprovechadas.length > 0 ? (
+        <div className="space-y-1">
+          <p className="text-sm font-bold text-ok">
+            {route.features_aprovechadas.length} amenidad{route.features_aprovechadas.length !== 1 ? 'es' : ''} en ruta
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {route.features_aprovechadas.map((f) => (
+              <FeatureMarker key={f.id} feature={f} />
+            ))}
+          </div>
+        </div>
+      ) : null}
+
       <div className="max-h-44 overflow-auto pr-1 md:max-h-64">
         <StepList steps={route.steps} />
       </div>

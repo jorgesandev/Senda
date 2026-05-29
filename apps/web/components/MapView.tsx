@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { TJ_CENTER, featureColor, featureLabel } from '@/lib/map'
+import { TJ_CENTER, featureColor, featureIcon, featureLabel } from '@/lib/map'
 import { useSendaStore } from '@/lib/store'
 import type { MapFeature, MapViewState, RouteResponse } from '@/lib/types'
 
@@ -71,10 +71,7 @@ function routePath(route: RouteResponse | null) {
 }
 
 function markerLabel(feature: MapFeature) {
-  if (feature.kind === 'barrier') return 'B'
-  if (feature.kind === 'amenity') return 'A'
-  if (feature.kind === 'transport') return 'T'
-  return 'C'
+  return featureIcon(feature)
 }
 
 function fitRoute(map: google.maps.Map, google: GoogleApi, route: RouteResponse | null) {
@@ -97,6 +94,12 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
   const [loadError, setLoadError] = useState<string | null>(null)
   const activeRoute = useSendaStore((store) => store.activeRoute)
   const liveFeatures = useSendaStore((store) => store.liveFeatures)
+  const profiles = useSendaStore((store) => store.profiles)
+  const loadLiveFeatures = useSendaStore((store) => store.loadLiveFeatures)
+
+  useEffect(() => {
+    loadLiveFeatures()
+  }, [loadLiveFeatures])
 
   useEffect(() => {
     let cancelled = false
@@ -169,7 +172,7 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
 
     markerRefs.current.forEach((marker) => marker.setMap(null))
     markerRefs.current = liveFeatures.map((feature) => {
-      const color = featureColor(feature)
+      const color = featureColor(feature, profiles)
       return new google.maps.Marker({
         map,
         position: { lat: feature.lat, lng: feature.lng },
@@ -193,7 +196,7 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
     })
 
     fitRoute(map, google, activeRoute)
-  }, [activeRoute, googleApi, liveFeatures])
+  }, [activeRoute, googleApi, liveFeatures, profiles])
 
   return (
     <section className="relative h-full min-h-[540px] overflow-hidden bg-map md:rounded-lg md:border md:border-slate-800" aria-label="Mapa accesible de Senda">
