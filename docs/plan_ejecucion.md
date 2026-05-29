@@ -5,16 +5,26 @@ Marca cada casilla al terminar. Numeración `bloque.subtarea`.
 ---
 
 ## Bloque 0 · Setup y accesos *(haz esto primero, sin código)*
-- [ ] **0.1** Front vivo con mocks: `cd apps/web && bun install && bun dev` → abre `localhost:3000`, confirma que navega. Tu baseline.
-- [ ] **0.2** API viva: `cd apps/api && pip install -r requirements.txt && uvicorn main:app --reload` → `GET /health` responde ok.
-- [ ] **0.3** Proyecto Google Cloud: console.cloud.google.com → nuevo proyecto `senda`. Anota el **Project ID**.
-- [ ] **0.4** Redime los **créditos de Google Cloud** del evento en Billing y ligalos al proyecto.
-- [ ] **0.5** Habilita APIs (APIs & Services → Enable): **Geocoding**, **Map Tiles/Maps JS**, **Street View Static**, **Vertex AI**.
-- [ ] **0.6** Llaves: crea una **API key** (Maps/Geocoding/Street View) y restríngela. Para visión, lo más rápido es una **API key de Gemini** en aistudio.google.com → "Get API key".
-- [ ] **0.7** **Verifica la cuota de Street View Static** (consola → Quotas) — es tu cuello de botella. Estima cuántas imágenes te alcanzan. Esto es de la hora 1.
-- [ ] **0.8** Firebase: console.firebase.google.com → agrega proyecto (liga al mismo GCP) → crea **Firestore** (modo test para el hackathon) → Project settings → Service accounts → **genera la llave JSON**.
-- [ ] **0.9** Llena los `.env` (web y api) desde `infra/.env.example`: llaves, `NEXT_PUBLIC_API_URL=http://localhost:8080`, y un `NEXT_PUBLIC_MAP_STYLE_URL` de un estilo MapLibre oscuro (ej. estilo dark de demotiles/MapTiler).
-- [ ] **0.10** `git init`, repo **público** en GitHub, commit `chore: scaffold verificado`.
+- [x] **0.1** Front vivo con mocks: `cd apps/web && bun install && bun dev` → abre `localhost:3000`, confirma que navega. Tu baseline.
+  Nota: shell web levantado y navegación base verificada localmente.
+- [x] **0.2** API viva: `cd apps/api && pip install -r requirements.txt && uvicorn main:app --reload` → `GET /health` responde ok.
+  Nota: `GET /health` validado con respuesta `{"status":"ok"}`.
+- [x] **0.3** Proyecto Google Cloud: console.cloud.google.com → nuevo proyecto `senda`. Anota el **Project ID**.
+  Nota: proyecto creado con ID `sendamx`.
+- [x] **0.4** Redime los **créditos de Google Cloud** del evento en Billing y ligalos al proyecto.
+  Nota: crédito disponible confirmado por `$300 USD` en cuenta nueva.
+- [x] **0.5** Habilita APIs (APIs & Services → Enable): **Geocoding**, **Map Tiles/Maps JS**, **Street View Static**, **Vertex AI**.
+  Nota: Geocoding, Map Tiles, Maps JS y Street View Static ya habilitadas.
+- [x] **0.6** Llaves: crea una **API key** (Maps/Geocoding/Street View) y restríngela. Para visión, lo más rápido es una **API key de Gemini** en aistudio.google.com → "Get API key".
+  Nota: Maps API key creada; API key de Gemini ya disponible por organizadores.
+- [x] **0.7** **Verifica la cuota de Street View Static** (consola → Quotas) — es tu cuello de botella. Estima cuántas imágenes te alcanzan. Esto es de la hora 1.
+  Nota: referencia de costo confirmada: `$7 USD` por `1000` peticiones.
+- [x] **0.8** Firebase: console.firebase.google.com → agrega proyecto (liga al mismo GCP) → crea **Firestore** (modo test para el hackathon) → Project settings → Service accounts → **genera la llave JSON**.
+  Nota: Firebase ligado a `sendamx`; autenticación local lista por ADC con cuota de proyecto (`gcloud auth application-default set-quota-project sendamx`).
+- [x] **0.9** Llena los `.env` (web y api) desde `infra/.env.example`: llaves, `NEXT_PUBLIC_API_URL=http://localhost:8080`, y un `NEXT_PUBLIC_MAP_STYLE_URL` de un estilo MapLibre oscuro (ej. estilo dark de demotiles/MapTiler).
+  Nota: `.env` creados en `apps/web` y `apps/api`; backend apuntando a `FIREBASE_CREDENTIALS_JSON=/Users/alejandro/.config/gcloud/application_default_credentials.json`.
+- [x] **0.10** `git init`, repo **público** en GitHub, commit `chore: scaffold verificado`.
+  Nota: repo ya inicializado y público; commit de scaffold existente (mensaje equivalente con `scaffold`).
 
 ## Bloque 1 · Valhalla real con Tijuana *(peldaño 1 — mata el riesgo #1)*
 - [ ] **1.1** PBF de Tijuana. **Rápido:** extract.bbbike.org → formato PBF → dibuja caja sobre TJ → te llega el link. **Alterno:** baja México de Geofabrik y recorta: `osmium extract --bbox -117.13,32.40,-116.85,32.57 mexico-latest.osm.pbf -o tijuana.osm.pbf`.
