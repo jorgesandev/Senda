@@ -10,6 +10,7 @@ from features import get_active_features
 from geo import geocode
 from matrix import resolve_effect
 from models import LatLng, MapFeature, RouteRequest, RouteResponse
+from translate import translate_steps
 
 
 def _decode_polyline6(shape: str) -> list[tuple[float, float]]:
@@ -165,11 +166,13 @@ async def request_valhalla_route(payload: RouteRequest) -> RouteResponse:
         raise RuntimeError("Valhalla returned no route shape")
 
     distance_m, eta_min = _summary(trip)
+    raw_steps = _extract_steps(trip)
+    translated_steps = await translate_steps(raw_steps)
     return RouteResponse(
         coords=coords,
         distance_m=distance_m,
         eta_min=eta_min,
         features_evitadas=features_evitadas,
         features_aprovechadas=[],
-        steps=_extract_steps(trip),
+        steps=translated_steps,
     )

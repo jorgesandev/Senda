@@ -48,11 +48,12 @@ export function RouteStepBar() {
       </button>
       <button
         type="button"
-        className="touch-target grid h-9 w-9 shrink-0 place-items-center rounded-full text-muted transition hover:bg-red-100 hover:text-red-700"
-        aria-label="Cancelar viaje"
+        className="touch-target inline-flex h-9 shrink-0 items-center gap-1 rounded-full bg-red-500 px-2.5 text-xs font-bold text-white transition hover:brightness-95"
+        aria-label="Terminar viaje"
         onClick={clearActiveRoute}
       >
-        <X aria-hidden="true" size={18} />
+        <X aria-hidden="true" size={14} />
+        Terminar
       </button>
     </div>
   )

@@ -117,11 +117,12 @@ export function RouteResultCard({ route }: { route: RouteResponse }) {
             </button>
             <button
               type="button"
-              className="touch-target grid h-12 w-12 place-items-center rounded-full border border-slate-300 bg-white text-text transition hover:bg-red-100 hover:text-red-700"
-              aria-label="Cerrar ruta"
+              className="touch-target inline-flex h-12 shrink-0 items-center gap-1.5 rounded-full bg-red-500 px-3 text-sm font-bold text-white transition hover:brightness-95"
+              aria-label="Terminar viaje"
               onClick={clearActiveRoute}
             >
-              <X aria-hidden="true" size={21} />
+              <X aria-hidden="true" size={17} />
+              Terminar viaje
             </button>
           </div>
         </div>
