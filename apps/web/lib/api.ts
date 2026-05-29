@@ -9,6 +9,23 @@ import type {
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080'
 
+async function apiJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...init?.headers
+    }
+  })
+
+  if (!response.ok) {
+    const message = await response.text()
+    throw new Error(message || `API request failed: ${response.status}`)
+  }
+
+  return response.json() as Promise<T>
+}
+
 export const MOCK_FEATURES: MapFeature[] = [
   {
     id: 'feat-centro-ramp-001',
@@ -112,20 +129,10 @@ export const MOCK_TRANSPORT: MapFeature[] = [
 ]
 
 export async function requestRoute(payload: RouteRequest): Promise<RouteResponse> {
-  void API_BASE_URL
-  // Production will POST the route contract to the FastAPI route service.
-  return {
-    coords: [
-      [-117.0382, 32.5331],
-      [-117.0292, 32.529],
-      [-117.0191, 32.5225]
-    ],
-    distance_m: 1240,
-    eta_min: payload.profiles.includes('WHEELCHAIR') ? 19 : 15,
-    features_evitadas: [MOCK_FEATURES[0]],
-    features_aprovechadas: [MOCK_FEATURES[1]],
-    steps: ['Avanza hacia Av. Revolucion', 'Gira a la derecha en Calle 4ta', 'Continua por la ruta accesible marcada']
-  }
+  return apiJson<RouteResponse>('/route', {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  })
 }
 
 export async function submitReport(input: {

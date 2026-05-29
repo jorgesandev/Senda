@@ -3,7 +3,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Annotated
 
-from fastapi import FastAPI, File, Form, Query, UploadFile
+import httpx
+from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from models import (
@@ -16,6 +17,7 @@ from models import (
     RouteResponse,
     TransportResponse,
 )
+from routing import request_valhalla_route
 
 
 app = FastAPI(title="Senda API", version="0.1.0")
@@ -80,18 +82,15 @@ async def health() -> HealthResponse:
 
 @app.post("/route", response_model=RouteResponse)
 async def route(payload: RouteRequest) -> RouteResponse:
-    return RouteResponse(
-        coords=[(-117.0382, 32.5331), (-117.0292, 32.529), (-117.0191, 32.5225)],
-        distance_m=1240,
-        eta_min=19 if "WHEELCHAIR" in payload.profiles else 15,
-        features_evitadas=[mock_feature()],
-        features_aprovechadas=[mock_amenity()],
-        steps=[
-            "Avanza hacia Av. Revolucion",
-            "Gira a la derecha en Calle 4ta",
-            "Continua por la ruta accesible marcada",
-        ],
-    )
+    try:
+        return await request_valhalla_route(payload)
+    except httpx.HTTPStatusError as exc:
+        detail = exc.response.text[:500]
+        raise HTTPException(status_code=502, detail=f"Valhalla route failed: {detail}") from exc
+    except httpx.HTTPError as exc:
+        raise HTTPException(status_code=502, detail=f"Valhalla route unavailable: {exc}") from exc
+    except (RuntimeError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @app.post("/report", response_model=MapFeature)

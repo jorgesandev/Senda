@@ -35,12 +35,18 @@ Marca cada casilla al terminar. Numeración `bloque.subtarea`.
   Nota: corregida imagen Docker (`ghcr.io/gis-ops/docker-valhalla/valhalla:latest`), uso de `entrypoint` para `valhalla_build_tiles`/`valhalla_service`, y `valhalla.json` compatible con Valhalla 3.5.1. Tiles generados en `services/valhalla/valhalla_tiles/`; servicio levantado en detached en `localhost:8002`.
 - [x] **1.4** Smoke test: `curl` a `localhost:8002/route` con dos coords de TJ y costing `pedestrian` → debe regresar un trip con shape.
   Nota: `/status` responde Valhalla `3.5.1`; `/route` con coords de TJ devuelve `status: 0`, `Found route between points`, `length: 2.212 km`, `time: 1573.705 s` y `shape`.
-- [ ] **1.5** Implementa `routing.py`: arma el request a `VALHALLA_URL` con costing pedestrian, **decodifica el shape (polyline6)** a `[[lng,lat]...]`, mapea a `distance_m`/`eta_min`/`steps`. Quita el `NotImplementedError`.
-- [ ] **1.6** Conecta `/route` en `main.py` a `routing.py` (quita el mock).
-- [ ] **1.7** Geocoding en `geo.py`: implementa `geocode(texto)→lat/lng` con Google Geocoding. `LocationInput` lo consume.
-- [ ] **1.8** Apunta el front al API real (`api.ts` usa `NEXT_PUBLIC_API_URL`) y que `MapView` dibuje los coords devueltos.
-- [ ] **1.9** E2E: escribe un destino en TJ, busca ruta, ve la **línea real esquina a esquina**.
-- [ ] **1.10** Commit `feat: ruteo valhalla real`.
+- [x] **1.5** Implementa `routing.py`: arma el request a `VALHALLA_URL` con costing pedestrian, **decodifica el shape (polyline6)** a `[[lng,lat]...]`, mapea a `distance_m`/`eta_min`/`steps`. Quita el `NotImplementedError`.
+  Nota: `routing.py` llama Valhalla real, decodifica polyline6 a `[lng,lat]`, agrega distancia/ETA/pasos y deja `build_dynamic_excludes` listo para Bloque 2.
+- [x] **1.6** Conecta `/route` en `main.py` a `routing.py` (quita el mock).
+  Nota: `/route` usa `request_valhalla_route` y traduce errores de Valhalla/geocoding a respuestas HTTP claras.
+- [x] **1.7** Geocoding en `geo.py`: implementa `geocode(texto)→lat/lng` con Google Geocoding. `LocationInput` lo consume.
+  Nota: destino textual validado con `Zona Rio`; origen "Mi ubicacion" cae al baseline de Centro para demo sin permisos GPS todavía.
+- [x] **1.8** Apunta el front al API real (`api.ts` usa `NEXT_PUBLIC_API_URL`) y que `MapView` dibuje los coords devueltos.
+  Nota: `requestRoute` hace `POST /route`; `RoutePlanner` manda origen/destino del formulario y `MapView` ya consume `activeRoute.coords`.
+- [x] **1.9** E2E: escribe un destino en TJ, busca ruta, ve la **línea real esquina a esquina**.
+  Nota: smoke HTTP validado en `127.0.0.1:8080/route`: 50 coords, 1680 m, 20 min, 9 pasos para destino textual `Zona Rio`.
+- [x] **1.10** Commit `feat: ruteo valhalla real`.
+  Nota: commit creado con mensaje `feat: ruteo valhalla real`.
 
 ## Bloque 2 · Matriz viva en el ruteo *(peldaños 2 y 4)*
 - [ ] **2.1** Confirma `matrix.py`: `python -c "import matrix; print(matrix.resolve_effect(['WHEELCHAIR'], {'kind':'barrier','subtipo':'surface_broken','atributos':{}}))"` → `B`.

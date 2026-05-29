@@ -12,7 +12,7 @@ interface SendaState {
   a11yPrefs: A11yPrefs
   toggleProfile: (profile: Profile) => void
   toggleSituational: (situational: Situational) => void
-  planMockRoute: () => Promise<void>
+  planRoute: (origin: string, destination: string) => Promise<void>
   setActiveRoute: (route: RouteResponse | null) => void
   addLiveFeature: (feature: MapFeature) => void
   setHighContrast: (enabled: boolean) => void
@@ -41,11 +41,11 @@ export const useSendaStore = create<SendaState>((set, get) => ({
         ? state.situational.filter((item) => item !== situational)
         : [...state.situational, situational]
     })),
-  planMockRoute: async () => {
+  planRoute: async (origin, destination) => {
     const profiles: Profile[] = get().profiles.length > 0 ? get().profiles : ['WHEELCHAIR']
     const route = await requestRoute({
-      origin: { lat: 32.5331, lng: -117.0382 },
-      destination: { lat: 32.5225, lng: -117.0191 },
+      origin: normalizeLocation(origin, { lat: 32.5331, lng: -117.0382 }),
+      destination: normalizeLocation(destination, { lat: 32.5225, lng: -117.0191 }),
       profiles
     })
     set({ activeRoute: route })
@@ -61,3 +61,11 @@ export const useSendaStore = create<SendaState>((set, get) => ({
       a11yPrefs: { ...state.a11yPrefs, textScale: scale }
     }))
 }))
+
+function normalizeLocation(value: string, fallback: { lat: number; lng: number }) {
+  const normalized = value.trim()
+  if (!normalized || normalized.toLowerCase() === 'mi ubicacion' || normalized.toLowerCase() === 'mi ubicación') {
+    return fallback
+  }
+  return normalized
+}
