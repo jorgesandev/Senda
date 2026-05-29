@@ -1,5 +1,15 @@
 # CLAUDE.md — Senda
 
+## Session Start — Read These First
+
+At the beginning of every session, before writing any code, read:
+
+1. `docs/plan_ejecucion.md` — current block, completed tasks, what's next
+2. `docs/SRS.md` — product spec and data contracts
+3. `README.md` — public setup and architecture overview
+
+This is mandatory. Do not skip even if the task seems clear from the prompt.
+
 ## Project
 
 Accessible pedestrian routing for Tijuana. SRS at `docs/SRS.md`. Execution order at `docs/plan_ejecucion.md`. Implementation rules at `AGENTS.md` (read both).
@@ -35,9 +45,9 @@ docker compose -f services/valhalla/docker-compose.yml up
 
 ## Current Block
 
-**Bloque 2 — Matrix live in routing** (see `docs/plan_ejecucion.md`).
+Check `docs/plan_ejecucion.md` for the active block — it is the authoritative source.
 
-Completed so far: Bloque 0 + 1 (Valhalla real, geocoding, route drawing).
+Completed so far: Bloque 0–3 (Valhalla real, geocoding, route drawing, impact matrix, Firestore, SSE citizen loop).
 
 ## Verification Shortcuts
 
@@ -81,7 +91,7 @@ apps/web/
 - Package manager: **bun** (never npm/npx/yarn/pnpm).
 - Multi-profile worst-case: any `B` among selected profiles → block.
 - Coords to web map: `[lng, lat]` (GeoJSON order).
-- In-memory store until Firestore is wired (Bloque 3).
+- Firestore active (Bloque 3 done); in-memory store always kept in sync for fast reads.
 - `exclude_locations` for hot avoidance; never modify Valhalla tiles for demo path.
 - Do not commit `.env` or credentials.
 - No TODO comments — open items live in `docs/plan_ejecucion.md`.

@@ -1,5 +1,17 @@
 # Senda Agent Guide
 
+## Session Start — Mandatory Reads
+
+Before touching any code, read these three files in order:
+
+```
+docs/plan_ejecucion.md   ← active block, completed tasks, what's next
+docs/SRS.md              ← product spec, data contracts, matrix rules
+README.md                ← architecture, setup, public context
+```
+
+Do not skip. The plan file is the single source of truth for what to build next.
+
 ## Project Intent
 
 Senda is an accessible pedestrian routing app for Tijuana. Keep the implementation aligned with:
@@ -12,12 +24,7 @@ Do not add product behavior outside the SRS unless the SRS is updated in the sam
 
 ## Current Priority
 
-Follow `docs/plan_ejecucion.md` by block. The current active path is Bloque 1:
-
-- connect FastAPI routing to real Valhalla;
-- decode Valhalla `shape` polyline6 into `[lng, lat]` coordinates;
-- wire `/route` away from mocks;
-- connect web route drawing to the API response.
+Read `docs/plan_ejecucion.md` to find the current active block. Bloques 0–3 are complete.
 
 ## Stack
 
