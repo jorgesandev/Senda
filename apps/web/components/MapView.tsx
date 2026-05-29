@@ -87,6 +87,7 @@ function fitRoute(map: google.maps.Map, google: GoogleApi, route: RouteResponse 
 }
 
 export function MapView({ state = 'idle' }: { state?: MapViewState }) {
+  void state
   const containerRef = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<google.maps.Map | null>(null)
   const routeCasingRef = useRef<google.maps.Polyline | null>(null)
@@ -195,17 +196,14 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
   }, [activeRoute, googleApi, liveFeatures])
 
   return (
-    <section className="map-panel relative h-full min-h-[540px] overflow-hidden" aria-label="Mapa accesible de Senda">
+    <section className="relative h-full min-h-[540px] overflow-hidden bg-map md:rounded-lg md:border md:border-slate-800" aria-label="Mapa accesible de Senda">
       <div ref={containerRef} className="absolute inset-0" role="application" aria-label="Mapa interactivo de Tijuana" />
       {loadError ? (
         <div className="absolute inset-x-4 top-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 shadow-panel" role="alert">
           {loadError}
         </div>
       ) : null}
-      <div className="absolute left-4 top-4 rounded-md bg-white px-3 py-2 text-sm font-semibold text-text shadow-panel">
-        Estado: {state}
-      </div>
-      <div className="absolute bottom-4 left-4 flex max-w-sm flex-wrap gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-text shadow-panel" aria-label="Leyenda del mapa">
+      <div className="absolute bottom-4 left-4 hidden max-w-sm flex-wrap gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-text shadow-panel md:flex" aria-label="Leyenda del mapa">
         <span>B Barrera</span>
         <span>A Amenidad</span>
         <span>T Transporte</span>

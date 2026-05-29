@@ -3,7 +3,7 @@ import { Home, Landmark, Map, PlusCircle } from 'lucide-react'
 
 export function BottomNav() {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white md:hidden" aria-label="Navegacion inferior">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur md:hidden" aria-label="Navegacion inferior">
       <div className="grid grid-cols-4">
         <Link href="/" className="touch-target flex flex-col items-center justify-center gap-1 py-2 text-xs font-semibold">
           <Home aria-hidden="true" size={20} />
