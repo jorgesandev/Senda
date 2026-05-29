@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronLeft, ChevronRight, Navigation } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Navigation, X } from 'lucide-react'
 import { useSendaStore } from '@/lib/store'
 
 export function RouteStepBar() {
   const activeRoute = useSendaStore((state) => state.activeRoute)
+  const clearActiveRoute = useSendaStore((state) => state.clearActiveRoute)
   const [stepIndex, setStepIndex] = useState(0)
 
   if (!activeRoute || activeRoute.steps.length === 0) return null
@@ -44,6 +45,14 @@ export function RouteStepBar() {
         onClick={() => setStepIndex((i) => Math.min(total - 1, i + 1))}
       >
         <ChevronRight aria-hidden="true" size={18} />
+      </button>
+      <button
+        type="button"
+        className="touch-target grid h-9 w-9 shrink-0 place-items-center rounded-full text-muted transition hover:bg-red-100 hover:text-red-700"
+        aria-label="Cancelar viaje"
+        onClick={clearActiveRoute}
+      >
+        <X aria-hidden="true" size={18} />
       </button>
     </div>
   )

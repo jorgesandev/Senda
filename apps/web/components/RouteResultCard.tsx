@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { ChevronDown, ChevronUp, Clock, ListChecks, MapPinned, Route, ShieldAlert, Volume2 } from 'lucide-react'
+import { ChevronDown, ChevronUp, Clock, ListChecks, MapPinned, Route, ShieldAlert, Volume2, X } from 'lucide-react'
 import { FeatureMarker } from './FeatureMarker'
 import { StepList } from './StepList'
 import { createVoiceController } from '@/lib/voice'
@@ -32,6 +32,7 @@ function formatDistance(meters: number): string {
 
 export function RouteResultCard({ route }: { route: RouteResponse }) {
   const narratorMuted = useSendaStore((s) => s.a11yPrefs.narratorMuted)
+  const clearActiveRoute = useSendaStore((s) => s.clearActiveRoute)
   const prevRouteRef = useRef<RouteResponse | null>(null)
   const [expanded, setExpanded] = useState(false)
   const [activeTab, setActiveTab] = useState<RouteTab>('summary')
@@ -99,9 +100,8 @@ export function RouteResultCard({ route }: { route: RouteResponse }) {
             <button
               type="button"
               onClick={() => voice.speak(buildRouteSummary(route))}
-              disabled={narratorMuted}
               aria-label="Leer resumen de la ruta"
-              className="touch-target inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-3 text-sm font-bold text-text transition hover:bg-surface disabled:opacity-40"
+              className="touch-target inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-3 text-sm font-bold text-text transition hover:bg-surface"
             >
               <Volume2 aria-hidden="true" size={17} />
               <span className="hidden sm:inline">Leer</span>
@@ -114,6 +114,14 @@ export function RouteResultCard({ route }: { route: RouteResponse }) {
               onClick={() => setExpanded((open) => !open)}
             >
               {expanded ? <ChevronDown aria-hidden="true" size={21} /> : <ChevronUp aria-hidden="true" size={21} />}
+            </button>
+            <button
+              type="button"
+              className="touch-target grid h-12 w-12 place-items-center rounded-full border border-slate-300 bg-white text-text transition hover:bg-red-100 hover:text-red-700"
+              aria-label="Cerrar ruta"
+              onClick={clearActiveRoute}
+            >
+              <X aria-hidden="true" size={21} />
             </button>
           </div>
         </div>
@@ -158,7 +166,7 @@ export function RouteResultCard({ route }: { route: RouteResponse }) {
                   <p className="text-sm font-bold text-red-700" aria-live="polite">
                     {avoidedCount} barrera{avoidedCount !== 1 ? 's' : ''} evitada{avoidedCount !== 1 ? 's' : ''}
                   </p>
-                  <p className="mt-1 text-sm text-red-700">La matriz eligió el peor caso para tus perfiles activos.</p>
+                  <p className="mt-1 text-sm text-red-700">Ruta optimizada para tus perfiles funcionales.</p>
                 </div>
                 <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-3">
                   <p className="text-sm font-bold text-emerald-700">

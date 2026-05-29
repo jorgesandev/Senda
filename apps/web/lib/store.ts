@@ -104,6 +104,7 @@ interface SendaState {
   commitRoute: () => void
   clearPreview: () => void
   setActiveRoute: (route: RouteResponse | null) => void
+  clearActiveRoute: () => void
   addLiveFeature: (feature: MapFeature) => void
   setReportKind: (kind: ReportKind) => void
   rerouteIfNeeded: (feature: MapFeature) => Promise<void>
@@ -180,6 +181,8 @@ export const useSendaStore = create<SendaState>((set, get) => ({
   },
 
   setActiveRoute: (route) => set({ activeRoute: route }),
+
+  clearActiveRoute: () => set({ activeRoute: null, activeOrigin: null, activeDestination: null, previewRoute: null, previewOrigin: null, previewDestination: null, hasStartedRoute: false }),
 
   setReportKind: (kind) => set({ reportKind: kind }),
 
