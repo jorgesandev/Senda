@@ -80,7 +80,7 @@ docs/           SRS, arquitectura
 ### Flujo principal
 
 ```
-Usuario abre el mapa → deja origen en "Mi ubicacion" o lo edita → escribe destino (texto o voz) → ajusta perfiles
+Usuario abre el mapa → searchbar de destino → al tocar se expande origen (por defecto "Mi ubicacion") + destino → ajusta perfiles → "Buscar" calcula preview con distancia/ETA → "Iniciar" activa la ruta
   → API geocodifica → consulta features del bbox
   → matrix.resolve_effect (peor caso multi-perfil)
   → Valhalla route con exclude_locations para barreras B

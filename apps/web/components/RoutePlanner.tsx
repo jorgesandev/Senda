@@ -1,7 +1,7 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
-import { Accessibility, Brain, Ear, Eye, Glasses, LocateFixed, Navigation, PersonStanding, Search } from 'lucide-react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
+import { Accessibility, Brain, Ear, Eye, Glasses, LocateFixed, MapPin, Navigation, PersonStanding, Search, X } from 'lucide-react'
 import { useSendaStore } from '@/lib/store'
 import type { Profile } from '@/lib/types'
 
@@ -14,96 +14,229 @@ const PROFILE_OPTIONS: Array<{ profile: Profile; label: string; short: string; i
   { profile: 'COGNITIVE', label: 'Cognicion', short: 'Cognicion', icon: Brain }
 ]
 
+function formatDistance(meters: number): string {
+  return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${Math.round(meters)} m`
+}
+
 export function RoutePlanner() {
+  const [isExpanded, setIsExpanded] = useState(false)
   const [origin, setOrigin] = useState('Mi ubicacion')
   const [destination, setDestination] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [showOrigin, setShowOrigin] = useState(false)
-  const planRoute = useSendaStore((state) => state.planRoute)
+
+  const destinationInputRef = useRef<HTMLInputElement>(null)
+
+  const calculatePreview = useSendaStore((state) => state.calculatePreview)
+  const commitRoute = useSendaStore((state) => state.commitRoute)
+  const clearPreview = useSendaStore((state) => state.clearPreview)
+  const previewRoute = useSendaStore((state) => state.previewRoute)
+  const activeRoute = useSendaStore((state) => state.activeRoute)
+  const activeDestination = useSendaStore((state) => state.activeDestination)
+  const hasStartedRoute = useSendaStore((state) => state.hasStartedRoute)
   const profiles = useSendaStore((state) => state.profiles)
   const toggleProfile = useSendaStore((state) => state.toggleProfile)
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  // Si hay una ruta activa previa, mostrar su destino en el input
+  useEffect(() => {
+    if (activeDestination && !destination && !previewRoute) {
+      setDestination(activeDestination)
+    }
+  }, [activeDestination, destination, previewRoute])
+
+  const currentRoute = previewRoute || activeRoute
+  const showRouteInfo = !!previewRoute && !hasStartedRoute
+  const isRouted = !!currentRoute && !hasStartedRoute
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+
+    if (!destination.trim()) {
+      setError('Ingresa un destino')
+      return
+    }
+
     setIsLoading(true)
     setError(null)
+
     try {
-      await planRoute(origin, destination)
-    } catch (routeError) {
-      setError(routeError instanceof Error ? routeError.message : 'No se pudo calcular la ruta')
+      if (isRouted) {
+        commitRoute()
+      } else {
+        await calculatePreview(origin, destination)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo calcular la ruta')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  function handleExpand() {
+    setIsExpanded(true)
+    // Enfocar destino al expandir para que el usuario siga escribiendo
+    setTimeout(() => destinationInputRef.current?.focus(), 50)
+  }
+
+  function handleClearDestination() {
+    setDestination('')
+    destinationInputRef.current?.focus()
+  }
+
+  function handleClose() {
+    setIsExpanded(false)
+    if (!hasStartedRoute) {
+      clearPreview()
     }
   }
 
   return (
     <form
       className="space-y-2 rounded-[1.75rem] border border-white/80 bg-white/95 p-2.5 shadow-[0_14px_40px_rgba(15,23,42,0.24)] backdrop-blur"
-      onSubmit={submit}
+      onSubmit={handleSubmit}
       aria-label="Planeador de ruta"
     >
-      <div className="flex items-center gap-2">
-        <div className="min-w-0 flex-1">
-          <label className="sr-only" htmlFor="route-destination">
-            Destino
-          </label>
-          <div className="flex min-h-12 items-center gap-2 rounded-full bg-surface px-4">
-            <Search aria-hidden="true" size={20} className="shrink-0 text-muted" />
-            <input
-              id="route-destination"
-              className="min-h-12 min-w-0 flex-1 bg-transparent text-base font-semibold outline-none placeholder:text-muted"
-              value={destination}
-              placeholder="Buscar destino"
-              onChange={(event) => setDestination(event.target.value)}
-            />
+      {!isExpanded ? (
+        // Estado colapsado: solo input de destino
+        <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <label className="sr-only" htmlFor="route-destination-collapsed">
+              Destino
+            </label>
+            <div className="flex min-h-12 items-center gap-2 rounded-full bg-surface px-4">
+              <Search aria-hidden="true" size={20} className="shrink-0 text-muted" />
+              <input
+                id="route-destination-collapsed"
+                className="min-h-12 min-w-0 flex-1 bg-transparent text-base font-semibold outline-none placeholder:text-muted"
+                value={destination}
+                placeholder="Buscar destino"
+                onChange={(event) => setDestination(event.target.value)}
+                onFocus={handleExpand}
+              />
+              {destination ? (
+                <button
+                  type="button"
+                  className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-muted transition hover:bg-slate-200"
+                  aria-label="Borrar destino"
+                  onClick={handleClearDestination}
+                >
+                  <X aria-hidden="true" size={16} />
+                </button>
+              ) : null}
+            </div>
           </div>
+          <button
+            type="submit"
+            className="touch-target inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-brand px-4 font-bold text-white shadow-[0_8px_20px_rgba(37,99,235,0.28)] transition hover:brightness-95 disabled:opacity-60"
+            disabled={isLoading}
+            aria-label="Buscar ruta"
+          >
+            <Navigation aria-hidden="true" size={19} />
+            <span className="hidden sm:inline">Buscar</span>
+          </button>
         </div>
-        <button
-          type="submit"
-          className="touch-target inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-brand px-4 font-bold text-white shadow-[0_8px_20px_rgba(37,99,235,0.28)] transition hover:brightness-95 disabled:opacity-60"
-          disabled={isLoading}
-          aria-label={isLoading ? 'Buscando ruta' : 'Buscar ruta'}
-        >
-          <Navigation aria-hidden="true" size={19} />
-          <span className="hidden sm:inline">{isLoading ? 'Buscando' : 'Buscar'}</span>
-        </button>
-      </div>
+      ) : (
+        // Estado expandido: origen + destino apilados
+        <div className="space-y-2">
+          {/* Header con título y botón cerrar */}
+          <div className="flex items-center justify-between px-1">
+            <span className="text-sm font-bold text-text">Planear ruta</span>
+            <button
+              type="button"
+              className="touch-target grid h-10 w-10 place-items-center rounded-full text-muted transition hover:bg-surface"
+              aria-label="Cerrar"
+              onClick={handleClose}
+            >
+              <X aria-hidden="true" size={20} />
+            </button>
+          </div>
 
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          className="touch-target inline-flex h-12 shrink-0 items-center gap-2 rounded-full px-3 text-sm font-semibold text-brand hover:bg-blue-50"
-          aria-label={showOrigin ? 'Ocultar origen' : 'Editar origen'}
-          aria-expanded={showOrigin}
-          onClick={() => setShowOrigin((open) => !open)}
-        >
-          <LocateFixed aria-hidden="true" size={18} />
-          <span>Origen</span>
-        </button>
-        <p className="min-w-0 flex-1 truncate text-sm font-semibold text-muted" aria-live="polite">
-          {origin}
-        </p>
-      </div>
+          {/* Origen */}
+          <div className="flex items-center gap-2">
+            <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-600">
+              <LocateFixed aria-hidden="true" size={16} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <label className="sr-only" htmlFor="route-origin">
+                Origen
+              </label>
+              <input
+                id="route-origin"
+                className="min-h-11 w-full rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold outline-none placeholder:text-muted"
+                value={origin}
+                placeholder="Origen"
+                onChange={(event) => setOrigin(event.target.value)}
+              />
+            </div>
+          </div>
 
-      {showOrigin ? (
-        <div className="grid grid-cols-[44px_minmax(0,1fr)] items-center gap-2">
-          <span className="grid h-11 w-11 place-items-center rounded-full text-brand" aria-hidden="true">
-            <LocateFixed size={21} />
-          </span>
-          <label className="sr-only" htmlFor="route-origin">
-            Origen
-          </label>
-          <input
-            id="route-origin"
-            className="min-h-11 rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold outline-none placeholder:text-muted"
-            value={origin}
-            placeholder="Origen"
-            onChange={(event) => setOrigin(event.target.value)}
-          />
+          {/* Destino */}
+          <div className="flex items-center gap-2">
+            <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-red-100 text-red-600">
+              <MapPin aria-hidden="true" size={16} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <label className="sr-only" htmlFor="route-destination">
+                Destino
+              </label>
+              <div className="flex items-center rounded-full border border-slate-200 bg-white px-4">
+                <input
+                  id="route-destination"
+                  ref={destinationInputRef}
+                  className="min-h-11 min-w-0 flex-1 bg-transparent text-sm font-semibold outline-none placeholder:text-muted"
+                  value={destination}
+                  placeholder="Buscar destino"
+                  onChange={(event) => setDestination(event.target.value)}
+                />
+                {destination ? (
+                  <button
+                    type="button"
+                    className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-muted transition hover:bg-slate-200"
+                    aria-label="Borrar destino"
+                    onClick={handleClearDestination}
+                  >
+                    <X aria-hidden="true" size={16} />
+                  </button>
+                ) : null}
+              </div>
+            </div>
+          </div>
+
+          {/* Info del viaje (preview) */}
+          {showRouteInfo ? (
+            <div className="rounded-2xl bg-surface p-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-lg font-bold text-text">
+                    {formatDistance(previewRoute.distance_m)}
+                  </span>
+                  <span className="text-sm font-semibold text-muted">
+                    {previewRoute.eta_min} min
+                  </span>
+                  {previewRoute.features_evitadas.length > 0 && (
+                    <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">
+                      {previewRoute.features_evitadas.length} barrera{previewRoute.features_evitadas.length !== 1 ? 's' : ''} evitada{previewRoute.features_evitadas.length !== 1 ? 's' : ''}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          {/* Botón de acción principal */}
+          <button
+            type="submit"
+            className="touch-target inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-brand px-4 font-bold text-white shadow-[0_8px_20px_rgba(37,99,235,0.28)] transition hover:brightness-95 disabled:opacity-60"
+            disabled={isLoading}
+            aria-label={isLoading ? 'Buscando ruta' : isRouted ? 'Iniciar ruta' : 'Buscar ruta'}
+          >
+            <Navigation aria-hidden="true" size={19} />
+            <span>{isLoading ? 'Buscando...' : isRouted ? 'Iniciar' : 'Buscar'}</span>
+          </button>
         </div>
-      ) : null}
+      )}
 
+      {/* Perfiles funcionales - siempre visibles */}
       <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Perfiles funcionales">
         {PROFILE_OPTIONS.map(({ profile, label, short, icon: Icon }) => {
           const selected = profiles.includes(profile)

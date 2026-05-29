@@ -89,6 +89,10 @@ interface SendaState {
   activeRoute: RouteResponse | null
   activeOrigin: string | null
   activeDestination: string | null
+  previewRoute: RouteResponse | null
+  previewOrigin: string | null
+  previewDestination: string | null
+  hasStartedRoute: boolean
   liveFeatures: MapFeature[]
   reportKind: ReportKind
   showRerouteToast: boolean
@@ -96,6 +100,9 @@ interface SendaState {
   toggleProfile: (profile: Profile) => void
   toggleSituational: (situational: Situational) => void
   planRoute: (origin: string, destination: string) => Promise<void>
+  calculatePreview: (origin: string, destination: string) => Promise<void>
+  commitRoute: () => void
+  clearPreview: () => void
   setActiveRoute: (route: RouteResponse | null) => void
   addLiveFeature: (feature: MapFeature) => void
   setReportKind: (kind: ReportKind) => void
@@ -114,6 +121,10 @@ export const useSendaStore = create<SendaState>((set, get) => ({
   activeRoute: null,
   activeOrigin: null,
   activeDestination: null,
+  previewRoute: null,
+  previewOrigin: null,
+  previewDestination: null,
+  hasStartedRoute: false,
   liveFeatures: MOCK_FEATURES,
   reportKind: 'barrier',
   showRerouteToast: false,
@@ -140,7 +151,32 @@ export const useSendaStore = create<SendaState>((set, get) => ({
       destination: await resolveLocation(destination, { lat: 32.5225, lng: -117.0191 }),
       profiles
     })
-    set({ activeRoute: route, activeOrigin: origin, activeDestination: destination })
+    set({ activeRoute: route, activeOrigin: origin, activeDestination: destination, hasStartedRoute: true })
+  },
+
+  calculatePreview: async (origin, destination) => {
+    const profiles: Profile[] = get().profiles.length > 0 ? get().profiles : ['WHEELCHAIR']
+    const route = await requestRoute({
+      origin: await resolveLocation(origin, { lat: 32.5331, lng: -117.0382 }),
+      destination: await resolveLocation(destination, { lat: 32.5225, lng: -117.0191 }),
+      profiles
+    })
+    set({ previewRoute: route, previewOrigin: origin, previewDestination: destination, hasStartedRoute: false })
+  },
+
+  commitRoute: () => {
+    const { previewRoute, previewOrigin, previewDestination } = get()
+    if (!previewRoute) return
+    set({
+      activeRoute: previewRoute,
+      activeOrigin: previewOrigin,
+      activeDestination: previewDestination,
+      hasStartedRoute: true
+    })
+  },
+
+  clearPreview: () => {
+    set({ previewRoute: null, previewOrigin: null, previewDestination: null, hasStartedRoute: false })
   },
 
   setActiveRoute: (route) => set({ activeRoute: route }),
