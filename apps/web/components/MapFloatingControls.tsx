@@ -21,7 +21,7 @@ function controlButtonClass(active = false) {
 }
 
 const reportButtonClass =
-  'touch-target grid h-14 w-14 place-items-center rounded-full border border-brand bg-brand text-white shadow-[0_10px_26px_rgba(15,23,42,0.24)] transition hover:brightness-95 focus-visible:outline'
+  'touch-target grid h-14 w-14 place-items-center rounded-full border border-red-500 bg-red-500 text-white shadow-[0_10px_26px_rgba(15,23,42,0.24)] transition hover:brightness-95 focus-visible:outline'
 
 export function MapFloatingControls({ onReportClick }: MapFloatingControlsProps) {
   const [locateState, setLocateState] = useState<LocateState>('idle')

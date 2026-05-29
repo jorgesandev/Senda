@@ -89,11 +89,13 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
   const mapRef = useRef<google.maps.Map | null>(null)
   const routeCasingRef = useRef<google.maps.Polyline | null>(null)
   const routeLineRef = useRef<google.maps.Polyline | null>(null)
+  const destMarkerRef = useRef<google.maps.Marker | null>(null)
   const userMarkerRef = useRef<google.maps.Marker | null>(null)
   const markerRefs = useRef<google.maps.Marker[]>([])
   const [googleApi, setGoogleApi] = useState<GoogleApi | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
   const activeRoute = useSendaStore((store) => store.activeRoute)
+  const previewRoute = useSendaStore((store) => store.previewRoute)
   const liveFeatures = useSendaStore((store) => store.liveFeatures)
   const profiles = useSendaStore((store) => store.profiles)
 
@@ -136,7 +138,8 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
     const google = googleApi
     if (!map || !google) return
 
-    const path = routePath(activeRoute)
+    const routeToDraw = activeRoute || previewRoute
+    const path = routePath(routeToDraw)
 
     if (!routeCasingRef.current) {
       routeCasingRef.current = new google.maps.Polyline({
@@ -191,8 +194,33 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
       })
     })
 
-    fitRoute(map, google, activeRoute)
-  }, [activeRoute, googleApi, liveFeatures, profiles])
+    if (routeToDraw && path.length > 0) {
+      const dest = path[path.length - 1]
+      if (!destMarkerRef.current) {
+        destMarkerRef.current = new google.maps.Marker({
+          map,
+          position: dest,
+          title: 'Destino',
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillColor: '#EF4444',
+            fillOpacity: 1,
+            scale: 10,
+            strokeColor: '#FFFFFF',
+            strokeWeight: 3
+          },
+          zIndex: 35
+        })
+      } else {
+        destMarkerRef.current.setPosition(dest)
+        destMarkerRef.current.setMap(map)
+      }
+    } else if (destMarkerRef.current) {
+      destMarkerRef.current.setMap(null)
+    }
+
+    fitRoute(map, google, routeToDraw)
+  }, [activeRoute, previewRoute, googleApi, liveFeatures, profiles])
 
   useEffect(() => {
     const map = mapRef.current

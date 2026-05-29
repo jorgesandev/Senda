@@ -80,11 +80,12 @@ docs/           SRS, arquitectura
 ### Flujo principal
 
 ```
-Usuario abre el mapa → searchbar de destino → al tocar se expande origen (por defecto "Mi ubicacion") + destino → ajusta perfiles → "Buscar" calcula preview con distancia/ETA → "Iniciar" activa la ruta
+Usuario abre el mapa → searchbar de destino → al tocar se expande origen (por defecto "Mi ubicacion") + destino → ajusta perfiles → "Buscar" calcula preview dibujando ruta + marker rojo en destino
   → API geocodifica → consulta features del bbox
   → matrix.resolve_effect (peor caso multi-perfil)
   → Valhalla route con exclude_locations para barreras B
-  → mapa dibuja ruta + markers → bottom sheet resume ruta/pasos/barreras → TTS narra resultado
+  → "Iniciar" activa la ruta: searchbar se reemplaza por barra de pasos delgada, mapa centra en ubicación actual
+  → bottom sheet compacto resume ruta/pasos/barreras → TTS narra resultado
 
 Ciudadano reporta barrera (foto + GPS)
   → POST /report → Firestore → SSE broadcast

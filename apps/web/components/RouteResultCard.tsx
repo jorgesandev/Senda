@@ -70,11 +70,11 @@ export function RouteResultCard({ route }: { route: RouteResponse }) {
 
   return (
     <section
-      className="flex max-h-[72dvh] flex-col rounded-t-3xl border border-white/80 bg-white shadow-[0_-18px_48px_rgba(15,23,42,0.28)] md:max-h-[min(620px,calc(100dvh-2rem))] md:rounded-2xl md:border-slate-200"
+      className="flex max-h-[60dvh] flex-col rounded-t-3xl border border-white/80 bg-white shadow-[0_-18px_48px_rgba(15,23,42,0.28)] md:max-h-[min(520px,calc(100dvh-2rem))] md:rounded-2xl md:border-slate-200"
       aria-labelledby="route-result-title"
       aria-expanded={expanded}
     >
-      <div className="shrink-0 space-y-3 p-4 pb-3">
+      <div className="shrink-0 space-y-2 p-3 pb-2">
         <button
           type="button"
           className="mx-auto block h-8 w-16 rounded-full md:hidden"
@@ -119,18 +119,18 @@ export function RouteResultCard({ route }: { route: RouteResponse }) {
         </div>
 
         <dl className="grid grid-cols-3 gap-2">
-          <div className="rounded-2xl bg-surface p-3">
+          <div className="rounded-2xl bg-surface p-2.5">
             <dt className="text-xs font-semibold text-muted">Distancia</dt>
             <dd className="font-bold">{formatDistance(route.distance_m)}</dd>
           </div>
-          <div className="rounded-2xl bg-surface p-3">
+          <div className="rounded-2xl bg-surface p-2.5">
             <dt className="flex items-center gap-1 text-xs font-semibold text-muted">
               <Clock aria-hidden="true" size={15} />
               ETA
             </dt>
             <dd className="font-bold">{route.eta_min} min</dd>
           </div>
-          <div className="rounded-2xl bg-red-50 p-3">
+          <div className="rounded-2xl bg-red-50 p-2.5">
             <dt className="text-xs font-semibold text-red-700">Evitadas</dt>
             <dd className="font-bold text-red-700">{avoidedCount}</dd>
           </div>

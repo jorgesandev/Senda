@@ -48,6 +48,11 @@ export function RoutePlanner() {
   const showRouteInfo = !!previewRoute && !hasStartedRoute
   const isRouted = !!currentRoute && !hasStartedRoute
 
+  function isCurrentLocationLabel(value: string) {
+    const normalized = value.trim().toLowerCase()
+    return normalized === 'mi ubicacion' || normalized === 'mi ubicación'
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
@@ -62,6 +67,20 @@ export function RoutePlanner() {
     try {
       if (isRouted) {
         commitRoute()
+        // Centrar mapa en ubicación actual si el origen es GPS
+        if (typeof navigator !== 'undefined' && navigator.geolocation && isCurrentLocationLabel(origin)) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              window.dispatchEvent(
+                new CustomEvent('senda:center-map', {
+                  detail: { lat: pos.coords.latitude, lng: pos.coords.longitude }
+                })
+              )
+            },
+            () => {},
+            { enableHighAccuracy: true, timeout: 8000, maximumAge: 3000 }
+          )
+        }
       } else {
         await calculatePreview(origin, destination)
       }
