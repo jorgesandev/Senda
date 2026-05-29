@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import maplibregl from 'maplibre-gl'
-import { DARK_MAP_STYLE, TJ_CENTER, featuresGeoJson, routeGeoJson } from '@/lib/map'
+import { TJ_CENTER, featuresGeoJson, resolveMapStyle, routeGeoJson } from '@/lib/map'
 import { useSendaStore } from '@/lib/store'
 import type { MapViewState } from '@/lib/types'
 
@@ -17,7 +17,7 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: (process.env.NEXT_PUBLIC_MAP_STYLE_URL || DARK_MAP_STYLE) as maplibregl.StyleSpecification | string,
+      style: resolveMapStyle() as maplibregl.StyleSpecification | string,
       center: TJ_CENTER,
       zoom: 12.7,
       attributionControl: false
