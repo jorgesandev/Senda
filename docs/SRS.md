@@ -1,4 +1,4 @@
-# SRS — Senda · v2
+# SRS — Senda · v2 
 
 **Software Requirements Specification · v2.0** *(supersede v1.0)*
 Equipo Entropyc · HackFox 2026 · Track *Tijuana Sin Barreras*

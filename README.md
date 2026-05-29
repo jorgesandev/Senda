@@ -1,11 +1,12 @@
 # Senda
 
-Senda es una app map-first de ruteo peatonal accesible para Tijuana. Construida por el equipo Entropyc para HackFox 2026, track *Tijuana Sin Barreras*.
+Senda es una aplicacion de ruteo peatonal accesible para Tijuana, con el mapa como superficie principal. Construida por el equipo Entropyc para HackFox 2026, track *Tijuana Sin Barreras*.
 
 Separa el **tipo objetivo** de una barrera urbana de su **efecto por perfil**, y planea rutas usando el peor caso entre los perfiles funcionales seleccionados (silla de ruedas, ceguera, movilidad reducida, etc.). Un reporte ciudadano recalcula las rutas activas en tiempo real.
 
 **Demo:** [Vercel — ver `docs/status.md` para URL actualizada]  
-**API:** `https://senda-api-131553755517.us-central1.run.app`
+**API:** `https://senda-api-131553755517.us-central1.run.app`  
+**Repositorio:** [github.com/jorgesandev/Senda](https://github.com/jorgesandev/Senda)
 
 ---
 
@@ -36,7 +37,7 @@ docker compose -f services/valhalla/docker-compose.yml up
 
 ### Variables de entorno
 
-Copia `infra/.env.example` a `apps/web/.env` y `apps/api/.env` y llena las claves. Mínimo para correr local:
+Copia `infra/.env.example` a `apps/web/.env` y `apps/api/.env` y llena las claves. Minimo para correr local:
 
 ```
 # apps/api/.env
@@ -72,47 +73,47 @@ curl -s -X POST http://localhost:8080/route \
 apps/web        Next.js 14 App Router — mapa, bottom sheet de ruta, reportes, accesibilidad
 apps/api        FastAPI — /route, /features, /features/stream (SSE), /report
 services/       Valhalla con tiles reales de Tijuana
-data/seed/      Features sembradas (barreras y amenidades en Av. Revolución)
-docs/           SRS, plan de ejecución, status actual
+data/seed/      Features sembradas (barreras y amenidades en Av. Revolucion)
+docs/           SRS, arquitectura
 ```
 
 ### Flujo principal
 
 ```
-Usuario abre el mapa → deja origen en "Mi ubicación" o lo edita → escribe destino (texto o voz) → ajusta perfiles
+Usuario abre el mapa → deja origen en "Mi ubicacion" o lo edita → escribe destino (texto o voz) → ajusta perfiles
   → API geocodifica → consulta features del bbox
   → matrix.resolve_effect (peor caso multi-perfil)
   → Valhalla route con exclude_locations para barreras B
   → mapa dibuja ruta + markers → bottom sheet resume ruta/pasos/barreras → TTS narra resultado
 
-Ciudadano reporta barrera desde el sheet sobre el mapa o desde `/report` (foto + GPS)
+Ciudadano reporta barrera (foto + GPS)
   → POST /report → Firestore → SSE broadcast
   → haversine <80m de ruta activa + efecto=B
-  → rerouteIfNeeded → vibración háptica + banner visual + LiveRerouteToast
+  → rerouteIfNeeded → vibracion haptica + banner visual + LiveRerouteToast
 ```
 
-Cuando el origen es `Mi ubicación`, el frontend solicita GPS con `navigator.geolocation`; Centro de Tijuana se usa solo como fallback si el permiso o el GPS fallan.
+Cuando el origen es `Mi ubicacion`, el frontend solicita GPS con `navigator.geolocation`; Centro de Tijuana se usa solo como fallback si el permiso o el GPS fallan.
 
 ### Principio TIPO vs EFECTO
 
-Una barrera tiene atributos físicos objetivos (`surface_broken`, `ramp_missing`, etc.). Un perfil tiene sensibilidades funcionales. El costo de ruteo es `matrix.resolve_effect(perfiles, feature)`. Nunca se escribe `if profile == "WHEELCHAIR"` en el código de ruteo.
+Una barrera tiene atributos fisicos objetivos (`surface_broken`, `ramp_missing`, etc.). Un perfil tiene sensibilidades funcionales. El costo de ruteo es `matrix.resolve_effect(perfiles, feature)`. Nunca se escribe `if profile == "WHEELCHAIR"` en el codigo de ruteo.
 
 ---
 
 ## Stack
 
-| Capa | Tecnología |
+| Capa | Tecnologia |
 |---|---|
 | Frontend | Next.js 14, TypeScript, Tailwind, Zustand, Google Maps JS |
 | Accesibilidad | Web Speech API, speechSynthesis, Vibration API, ARIA |
 | Backend | FastAPI, pydantic v2, Python 3.12 |
 | Ruteo | Valhalla 3.5.1 con OpenStreetMap Tijuana |
-| Base de datos | Firestore (capa viva) + in-memory store (reads rápidos) |
+| Base de datos | Firestore (capa viva) + in-memory store (reads rapidos) |
 | Deploy | Cloud Run (API + Valhalla), Vercel (web) |
 
 ---
 
-## Despliegue en producción
+## Despliegue en produccion
 
 Ver `docs/status.md` para URLs actualizadas y comandos de rebuild.
 
@@ -126,10 +127,10 @@ gcloud run deploy senda-valhalla --source services/valhalla --region us-central1
 
 ---
 
-## Créditos
+## Creditos
 
 Desarrollo: Jorge Sandoval ([jorgesandoval.dev](https://jorgesandoval.dev))  
-Co-ideación e investigación de campo: Bernardo Morales ([bernardmora.github.io](https://bernardmora.github.io))
+Co-ideacion e investigacion de campo: Bernardo Morales ([bernardmora.github.io](https://bernardmora.github.io))
 
 ## Licencia
 

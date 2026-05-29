@@ -30,3 +30,14 @@ valhalla_tiles/
 
 # Logs
 *.log
+
+# Agent / local-only config
+AGENTS.md
+CLAUDE.md
+.claude/
+.vscode/
+
+# Internal docs (local only)
+docs/plan_ejecucion.md
+docs/status.md
+docs/pitch.md
