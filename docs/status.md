@@ -6,7 +6,7 @@
 
 ## Última actualización
 
-**2026-05-29** — Polish UI/UX Fases 1, 2, 3 y 5 aplicadas; Fase 4 y QA demo pendientes antes de Bloque 5. Backend desplegado en GCP.
+**2026-05-29** — Polish UI/UX Fases 1, 2, 3 y 5 aplicadas; `Mi ubicación` usa GPS real con fallback a Centro. Fase 4 y QA demo pendientes antes de Bloque 5.
 
 ---
 
@@ -43,6 +43,7 @@ Ver `docs/plan_ejecucion.md` para detalle de tareas.
 ### Ruteo
 - Valhalla 3.5.1 con tiles reales de Tijuana
 - Geocoding con Google Geocoding API
+- Origen `Mi ubicación` solicita `navigator.geolocation` y usa coordenadas reales del usuario; Centro de Tijuana queda solo como fallback si el permiso/GPS falla
 - Ruta peatonal con peor-caso multi-perfil (WHEELCHAIR, BLIND, REDUCED_MOB, LOW_VISION, DEAF_HOH, COGNITIVE)
 - WHEELCHAIR → 1607m ruta directa, evita 3 barreras
 - BLIND → 1642m ruta alterna norte, evita tactile_missing + aerial_obstacle

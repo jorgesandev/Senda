@@ -20,10 +20,37 @@ function haversineMeters(lat1: number, lng1: number, lat2: number, lng2: number)
   return 2 * R * Math.asin(Math.sqrt(a))
 }
 
-function normalizeLocation(value: string, fallback: { lat: number; lng: number }) {
+function isCurrentLocationLabel(value: string) {
+  const normalized = value.trim().toLowerCase()
+  return normalized === 'mi ubicacion' || normalized === 'mi ubicación'
+}
+
+function getBrowserLocation(fallback: { lat: number; lng: number }): Promise<{ lat: number; lng: number }> {
+  if (typeof window === 'undefined' || !navigator.geolocation) {
+    return Promise.resolve(fallback)
+  }
+
+  return new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const location = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        }
+        window.dispatchEvent(new CustomEvent('senda:center-map', { detail: location }))
+        resolve(location)
+      },
+      () => resolve(fallback),
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 3000 }
+    )
+  })
+}
+
+async function resolveLocation(value: string, fallback: { lat: number; lng: number }) {
   const normalized = value.trim()
-  if (!normalized || normalized.toLowerCase() === 'mi ubicacion' || normalized.toLowerCase() === 'mi ubicación') {
-    return fallback
+  if (!normalized) return fallback
+  if (isCurrentLocationLabel(value)) {
+    return getBrowserLocation(fallback)
   }
   return normalized
 }
@@ -109,8 +136,8 @@ export const useSendaStore = create<SendaState>((set, get) => ({
   planRoute: async (origin, destination) => {
     const profiles: Profile[] = get().profiles.length > 0 ? get().profiles : ['WHEELCHAIR']
     const route = await requestRoute({
-      origin: normalizeLocation(origin, { lat: 32.5331, lng: -117.0382 }),
-      destination: normalizeLocation(destination, { lat: 32.5225, lng: -117.0191 }),
+      origin: await resolveLocation(origin, { lat: 32.5331, lng: -117.0382 }),
+      destination: await resolveLocation(destination, { lat: 32.5225, lng: -117.0191 }),
       profiles
     })
     set({ activeRoute: route, activeOrigin: origin, activeDestination: destination })
@@ -145,8 +172,8 @@ export const useSendaStore = create<SendaState>((set, get) => ({
     set({ showRerouteToast: true })
     try {
       const newRoute = await requestRoute({
-        origin: normalizeLocation(activeOrigin, { lat: 32.5331, lng: -117.0382 }),
-        destination: normalizeLocation(activeDestination, { lat: 32.5225, lng: -117.0191 }),
+        origin: await resolveLocation(activeOrigin, { lat: 32.5331, lng: -117.0382 }),
+        destination: await resolveLocation(activeDestination, { lat: 32.5225, lng: -117.0191 }),
         profiles: profiles.length > 0 ? profiles : ['WHEELCHAIR']
       })
       set({ activeRoute: newRoute })

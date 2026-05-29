@@ -79,7 +79,7 @@ docs/           SRS, plan de ejecución, status actual
 ### Flujo principal
 
 ```
-Usuario abre el mapa → escribe destino (texto o voz) → ajusta perfiles
+Usuario abre el mapa → deja origen en "Mi ubicación" o lo edita → escribe destino (texto o voz) → ajusta perfiles
   → API geocodifica → consulta features del bbox
   → matrix.resolve_effect (peor caso multi-perfil)
   → Valhalla route con exclude_locations para barreras B
@@ -90,6 +90,8 @@ Ciudadano reporta barrera (foto + GPS)
   → haversine <80m de ruta activa + efecto=B
   → rerouteIfNeeded → vibración háptica + banner visual + LiveRerouteToast
 ```
+
+Cuando el origen es `Mi ubicación`, el frontend solicita GPS con `navigator.geolocation`; Centro de Tijuana se usa solo como fallback si el permiso o el GPS fallan.
 
 ### Principio TIPO vs EFECTO
 

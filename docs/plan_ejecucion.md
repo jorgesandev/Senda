@@ -15,6 +15,8 @@ Marca cada casilla al terminar. Numeración `bloque.subtarea`.
   Nota: se creó `apps/web/components/MapFloatingControls.tsx` con controles flotantes para centrar en mi ubicación, voz/micrófono, reportar y accesibilidad. `apps/web/components/MapView.tsx` escucha el evento `senda:center-map` para pan/zoom y marker de ubicación. `RoutePlanner` quedó sin mic/accesibilidad duplicados. Reportar sigue navegando a `/report`; la Fase 4 queda pendiente.
 - [ ] **P.5** Fase 6 — QA demo UI/UX.
   Nota: validar mobile-first y desktop: buscar `Zona Rio`, cambiar perfiles, ver polyline/markers, probar TTS, voz, haptics, SSE/Citizen Loop, alto contraste, texto 200%, foco visible y ausencia de solapes; correr `bun run build` y registrar riesgos antes de retomar Bloque 5.
+- [x] **P.6** Ajuste crítico — `Mi ubicación` usa GPS real al planear ruta.
+  Nota: `apps/web/lib/store.ts` ahora resuelve `Mi ubicacion` / `Mi ubicación` con `navigator.geolocation` antes de llamar `/route`, y centra el mapa vía evento `senda:center-map`. Centro de Tijuana queda solo como fallback si el navegador no tiene GPS o el permiso falla. Aplica también a voz y Citizen Loop porque ambos pasan por `planRoute` / `rerouteIfNeeded`.
 
 ## Bloque 0 · Setup y accesos *(haz esto primero, sin código)*
 - [x] **0.1** Front vivo con mocks: `cd apps/web && bun install && bun dev` → abre `localhost:3000`, confirma que navega. Tu baseline.
