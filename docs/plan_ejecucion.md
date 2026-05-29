@@ -27,10 +27,14 @@ Marca cada casilla al terminar. Numeración `bloque.subtarea`.
   Nota: repo ya inicializado y público; commit de scaffold existente (mensaje equivalente con `scaffold`).
 
 ## Bloque 1 · Valhalla real con Tijuana *(peldaño 1 — mata el riesgo #1)*
-- [ ] **1.1** PBF de Tijuana. **Rápido:** extract.bbbike.org → formato PBF → dibuja caja sobre TJ → te llega el link. **Alterno:** baja México de Geofabrik y recorta: `osmium extract --bbox -117.13,32.40,-116.85,32.57 mexico-latest.osm.pbf -o tijuana.osm.pbf`.
-- [ ] **1.2** Coloca `tijuana.osm.pbf` en la carpeta montada `custom_files/` del servicio valhalla.
-- [ ] **1.3** Levanta: `docker compose -f services/valhalla/docker-compose.yml up`. El **primer arranque construye los tiles** (tarda unos minutos); espera el log de "tiles built". Sirve en `:8002`.
-- [ ] **1.4** Smoke test: `curl` a `localhost:8002/route` con dos coords de TJ y costing `pedestrian` → debe regresar un trip con shape.
+- [x] **1.1** PBF de Tijuana. **Rápido:** extract.bbbike.org → formato PBF → dibuja caja sobre TJ → te llega el link. **Alterno:** baja México de Geofabrik y recorta: `osmium extract --bbox -117.13,32.40,-116.85,32.57 mexico-latest.osm.pbf -o tijuana.osm.pbf`.
+  Nota: `tijuana.osm.pbf` disponible localmente.
+- [x] **1.2** Coloca `tijuana.osm.pbf` en la carpeta montada `custom_files/` del servicio valhalla.
+  Nota: colocado en `services/valhalla/tijuana.osm.pbf`, que se monta como `/custom_files/tijuana.osm.pbf` al construir tiles.
+- [x] **1.3** Construye tiles con `valhalla_build_tiles` usando `ghcr.io/gis-ops/docker-valhalla/valhalla:latest` y montando `services/valhalla` como `/custom_files`; luego levanta `docker compose -f services/valhalla/docker-compose.yml up`. Sirve en `:8002`.
+  Nota: corregida imagen Docker (`ghcr.io/gis-ops/docker-valhalla/valhalla:latest`), uso de `entrypoint` para `valhalla_build_tiles`/`valhalla_service`, y `valhalla.json` compatible con Valhalla 3.5.1. Tiles generados en `services/valhalla/valhalla_tiles/`; servicio levantado en detached en `localhost:8002`.
+- [x] **1.4** Smoke test: `curl` a `localhost:8002/route` con dos coords de TJ y costing `pedestrian` → debe regresar un trip con shape.
+  Nota: `/status` responde Valhalla `3.5.1`; `/route` con coords de TJ devuelve `status: 0`, `Found route between points`, `length: 2.212 km`, `time: 1573.705 s` y `shape`.
 - [ ] **1.5** Implementa `routing.py`: arma el request a `VALHALLA_URL` con costing pedestrian, **decodifica el shape (polyline6)** a `[[lng,lat]...]`, mapea a `distance_m`/`eta_min`/`steps`. Quita el `NotImplementedError`.
 - [ ] **1.6** Conecta `/route` en `main.py` a `routing.py` (quita el mock).
 - [ ] **1.7** Geocoding en `geo.py`: implementa `geocode(texto)→lat/lng` con Google Geocoding. `LocationInput` lo consume.

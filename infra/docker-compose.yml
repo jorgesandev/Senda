@@ -11,10 +11,11 @@ services:
       - valhalla
 
   valhalla:
-    image: gisops/valhalla:latest
+    image: ghcr.io/gis-ops/docker-valhalla/valhalla:latest
     ports:
       - "8002:8002"
     volumes:
       - ../services/valhalla/valhalla.json:/custom_files/valhalla.json:ro
       - ../services/valhalla/valhalla_tiles:/custom_files/valhalla_tiles
-    command: ["valhalla_service", "/custom_files/valhalla.json", "1"]
+    entrypoint: ["valhalla_service"]
+    command: ["/custom_files/valhalla.json", "1"]

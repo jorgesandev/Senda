@@ -12,8 +12,9 @@ This folder contains the Valhalla service shell for local routing over OSM data.
 Example tile build command shape:
 
 ```bash
-docker run --rm -v "$PWD:/custom_files" gisops/valhalla:latest \
-  valhalla_build_tiles -c /custom_files/valhalla.json /custom_files/tijuana.osm.pbf
+docker run --rm --entrypoint valhalla_build_tiles \
+  -v "$PWD:/custom_files" ghcr.io/gis-ops/docker-valhalla/valhalla:latest \
+  -c /custom_files/valhalla.json /custom_files/tijuana.osm.pbf
 ```
 
 Run the service:

@@ -25,6 +25,7 @@ venv/
 
 # GIS and Valhalla artifacts
 *.pbf
+duplicateways.txt
 valhalla_tiles/
 
 # Logs
