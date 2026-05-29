@@ -1,6 +1,6 @@
 # Senda
 
-Senda es una app de ruteo peatonal accesible para Tijuana. Construida por el equipo Entropyc para HackFox 2026, track *Tijuana Sin Barreras*.
+Senda es una app map-first de ruteo peatonal accesible para Tijuana. Construida por el equipo Entropyc para HackFox 2026, track *Tijuana Sin Barreras*.
 
 Separa el **tipo objetivo** de una barrera urbana de su **efecto por perfil**, y planea rutas usando el peor caso entre los perfiles funcionales seleccionados (silla de ruedas, ceguera, movilidad reducida, etc.). Un reporte ciudadano recalcula las rutas activas en tiempo real.
 
@@ -79,7 +79,7 @@ docs/           SRS, plan de ejecución, status actual
 ### Flujo principal
 
 ```
-Usuario selecciona perfiles → escribe destino (texto o voz)
+Usuario abre el mapa → escribe destino (texto o voz) → ajusta perfiles
   → API geocodifica → consulta features del bbox
   → matrix.resolve_effect (peor caso multi-perfil)
   → Valhalla route con exclude_locations para barreras B

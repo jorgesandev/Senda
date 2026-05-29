@@ -1,11 +1,9 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Accessibility, Brain, Ear, Eye, Glasses, LocateFixed, Menu, Mic, MicOff, Navigation, PersonStanding, Search } from 'lucide-react'
+import { Accessibility, Brain, Ear, Eye, Glasses, LocateFixed, Navigation, PersonStanding, Search, Settings2 } from 'lucide-react'
 import { AccessibilityControls } from './AccessibilityControls'
-import { createVoiceController } from '@/lib/voice'
+import { VoiceController } from './VoiceController'
 import { useSendaStore } from '@/lib/store'
 import type { Profile } from '@/lib/types'
 
@@ -18,18 +16,14 @@ const PROFILE_OPTIONS: Array<{ profile: Profile; label: string; short: string; i
   { profile: 'COGNITIVE', label: 'Cognicion', short: 'Cognicion', icon: Brain }
 ]
 
-const voice = createVoiceController()
-
 export function RoutePlanner() {
-  const router = useRouter()
   const [origin, setOrigin] = useState('Mi ubicacion')
   const [destination, setDestination] = useState('Zona Rio')
   const [isLoading, setIsLoading] = useState(false)
-  const [isListening, setIsListening] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [showOrigin, setShowOrigin] = useState(false)
+  const [showA11y, setShowA11y] = useState(false)
   const planRoute = useSendaStore((state) => state.planRoute)
-  const setReportKind = useSendaStore((state) => state.setReportKind)
   const profiles = useSendaStore((state) => state.profiles)
   const toggleProfile = useSendaStore((state) => state.toggleProfile)
 
@@ -46,44 +40,13 @@ export function RoutePlanner() {
     }
   }
 
-  async function handleVoiceCommand() {
-    if (isListening) return
-    setIsListening(true)
-    setError(null)
-    try {
-      const command = await voice.listenOnce()
-      if (command.intent === 'plan_route' && command.destination) {
-        setDestination(command.destination)
-        setIsLoading(true)
-        await planRoute(origin, command.destination)
-      } else if (command.intent === 'report_feature') {
-        setReportKind('barrier')
-        router.push('/report')
-      } else if (command.intent === 'open_map') {
-        router.push('/map')
-      } else if (command.destination) {
-        setDestination(command.destination)
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error de reconocimiento de voz')
-    } finally {
-      setIsListening(false)
-      setIsLoading(false)
-    }
-  }
-
   return (
-    <form className="space-y-3 rounded-lg bg-white p-3 shadow-[0_10px_35px_rgba(15,23,42,0.24)]" onSubmit={submit} aria-label="Planeador de ruta">
+    <form
+      className="space-y-2 rounded-[1.75rem] border border-white/80 bg-white/95 p-2.5 shadow-[0_14px_40px_rgba(15,23,42,0.24)] backdrop-blur"
+      onSubmit={submit}
+      aria-label="Planeador de ruta"
+    >
       <div className="flex items-center gap-2">
-        <button
-          type="button"
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-text hover:bg-surface"
-          aria-label="Abrir menu"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          <Menu aria-hidden="true" size={22} />
-        </button>
         <div className="min-w-0 flex-1">
           <label className="sr-only" htmlFor="route-destination">
             Destino
@@ -97,55 +60,71 @@ export function RoutePlanner() {
               placeholder="Buscar destino"
               onChange={(event) => setDestination(event.target.value)}
             />
-            <button
-              type="button"
-              className={`grid h-10 w-10 shrink-0 place-items-center rounded-full transition focus-visible:outline ${
-                isListening ? 'animate-pulse text-red-500' : 'text-brand hover:bg-white'
-              }`}
-              aria-label={isListening ? 'Escuchando comando de voz…' : 'Activar comando de voz'}
-              aria-pressed={isListening}
-              onClick={handleVoiceCommand}
-            >
-              {isListening ? <MicOff aria-hidden="true" size={20} /> : <Mic aria-hidden="true" size={20} />}
-            </button>
           </div>
         </div>
+        <VoiceController
+          showPanel={false}
+          className="!h-12 !w-12 shadow-none ring-1 ring-slate-200"
+        />
+        <button
+          type="submit"
+          className="touch-target inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-brand px-4 font-bold text-white shadow-[0_8px_20px_rgba(37,99,235,0.28)] transition hover:brightness-95 disabled:opacity-60"
+          disabled={isLoading}
+          aria-label={isLoading ? 'Buscando ruta' : 'Buscar ruta'}
+        >
+          <Navigation aria-hidden="true" size={19} />
+          <span className="hidden sm:inline">{isLoading ? 'Buscando' : 'Buscar'}</span>
+        </button>
       </div>
 
-      {menuOpen ? (
-        <div className="rounded-md border border-slate-200 bg-white p-3 shadow-panel">
-          <nav className="grid grid-cols-3 gap-2 text-sm font-bold" aria-label="Menu de mapa">
-            <Link href="/" className="rounded-md bg-surface px-3 py-2 text-center">
-              Inicio
-            </Link>
-            <Link href="/report" className="rounded-md bg-surface px-3 py-2 text-center">
-              Reportar
-            </Link>
-            <Link href="/gov" className="rounded-md bg-surface px-3 py-2 text-center">
-              Gobierno
-            </Link>
-          </nav>
-          <div className="mt-3">
-            <AccessibilityControls />
-          </div>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          className="touch-target inline-flex h-12 shrink-0 items-center gap-2 rounded-full px-3 text-sm font-semibold text-brand hover:bg-blue-50"
+          aria-label={showOrigin ? 'Ocultar origen' : 'Editar origen'}
+          aria-expanded={showOrigin}
+          onClick={() => setShowOrigin((open) => !open)}
+        >
+          <LocateFixed aria-hidden="true" size={18} />
+          <span>Origen</span>
+        </button>
+        <p className="min-w-0 flex-1 truncate text-sm font-semibold text-muted" aria-live="polite">
+          {origin}
+        </p>
+        <button
+          type="button"
+          className="touch-target grid h-12 w-12 place-items-center rounded-full text-muted hover:bg-surface hover:text-text"
+          aria-label={showA11y ? 'Ocultar controles de accesibilidad' : 'Mostrar controles de accesibilidad'}
+          aria-expanded={showA11y}
+          onClick={() => setShowA11y((open) => !open)}
+        >
+          <Settings2 aria-hidden="true" size={19} />
+        </button>
+      </div>
+
+      {showOrigin ? (
+        <div className="grid grid-cols-[44px_minmax(0,1fr)] items-center gap-2">
+          <span className="grid h-11 w-11 place-items-center rounded-full text-brand" aria-hidden="true">
+            <LocateFixed size={21} />
+          </span>
+          <label className="sr-only" htmlFor="route-origin">
+            Origen
+          </label>
+          <input
+            id="route-origin"
+            className="min-h-11 rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold outline-none placeholder:text-muted"
+            value={origin}
+            placeholder="Origen"
+            onChange={(event) => setOrigin(event.target.value)}
+          />
         </div>
       ) : null}
 
-      <div className="grid grid-cols-[44px_minmax(0,1fr)] items-center gap-2">
-        <button type="button" className="grid h-11 w-11 place-items-center rounded-full text-brand hover:bg-blue-50" aria-label="Usar ubicacion actual">
-          <LocateFixed aria-hidden="true" size={21} />
-        </button>
-        <label className="sr-only" htmlFor="route-origin">
-          Origen
-        </label>
-        <input
-          id="route-origin"
-          className="min-h-11 rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold outline-none placeholder:text-muted"
-          value={origin}
-          placeholder="Origen"
-          onChange={(event) => setOrigin(event.target.value)}
-        />
-      </div>
+      {showA11y ? (
+        <div className="rounded-2xl border border-slate-200 bg-white p-2" aria-label="Ajustes de accesibilidad">
+          <AccessibilityControls />
+        </div>
+      ) : null}
 
       <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Perfiles funcionales">
         {PROFILE_OPTIONS.map(({ profile, label, short, icon: Icon }) => {
@@ -154,7 +133,7 @@ export function RoutePlanner() {
             <button
               key={profile}
               type="button"
-              className={`inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-3 text-sm font-bold transition ${
+              className={`inline-flex h-12 min-w-12 shrink-0 items-center gap-1.5 rounded-full border px-3 text-sm font-bold transition ${
                 selected ? 'border-brand bg-blue-50 text-brand' : 'border-slate-200 bg-white text-text hover:bg-surface'
               }`}
               aria-label={label}
@@ -169,14 +148,10 @@ export function RoutePlanner() {
       </div>
 
       {error ? (
-        <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700" role="alert">
+        <p className="rounded-2xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700" role="alert">
           {error}
         </p>
       ) : null}
-      <button type="submit" className="btn-primary w-full rounded-full" disabled={isLoading}>
-        <Navigation aria-hidden="true" size={20} />
-        {isLoading ? 'Buscando' : 'Buscar ruta'}
-      </button>
     </form>
   )
 }

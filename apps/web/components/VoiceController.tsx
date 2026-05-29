@@ -21,9 +21,10 @@ const STATE_LABELS: Record<ListenState, string> = {
 interface Props {
   /** Renderiza el panel completo (mic + mute). false = solo muestra el botón mic compacto. */
   showPanel?: boolean
+  className?: string
 }
 
-export function VoiceController({ showPanel = true }: Props) {
+export function VoiceController({ showPanel = true, className }: Props) {
   const router = useRouter()
   const planRoute = useSendaStore((s) => s.planRoute)
   const setReportKind = useSendaStore((s) => s.setReportKind)
@@ -95,7 +96,7 @@ export function VoiceController({ showPanel = true }: Props) {
           isListening
             ? 'animate-pulse bg-red-500 text-white'
             : 'bg-white text-brand hover:bg-surface'
-        }`}
+        } ${className ?? ''}`}
       >
         {isListening ? <MicOff aria-hidden="true" size={24} /> : <Mic aria-hidden="true" size={24} />}
       </button>

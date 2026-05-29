@@ -194,7 +194,7 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
   }, [activeRoute, googleApi, liveFeatures, profiles])
 
   return (
-    <section className="relative h-full min-h-[540px] overflow-hidden bg-map md:rounded-lg md:border md:border-slate-800" aria-label="Mapa accesible de Senda">
+    <section className="relative h-full min-h-[540px] overflow-hidden bg-map" aria-label="Mapa accesible de Senda">
       <div ref={containerRef} className="absolute inset-0" role="application" aria-label="Mapa interactivo de Tijuana" />
       {loadError ? (
         <div className="absolute inset-x-4 top-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 shadow-panel" role="alert">

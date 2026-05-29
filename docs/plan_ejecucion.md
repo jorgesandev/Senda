@@ -4,6 +4,18 @@
 Marca cada casilla al terminar. Numeración `bloque.subtarea`.
 ---
 
+## Polish UI/UX pre-Bloque 5
+- [x] **P.1** Fase 1-2 map-first: `/map` full-screen, `RoutePlanner` compacto tipo top search bar, sin `AppHeader`/`BottomNav` en la superficie principal ni micrófono duplicado.
+  Nota: se reorganizó `apps/web/app/map/page.tsx` para dejar el mapa como superficie dominante; se compactó `apps/web/components/RoutePlanner.tsx` con destino principal, origen colapsable, chips de perfil y `VoiceController` integrado; se ajustaron `apps/web/components/VoiceController.tsx` y `apps/web/components/MapView.tsx` para soportar el nuevo shell sin cambiar ruteo, matriz, SSE, TTS, haptics ni reportes.
+- [ ] **P.2** Fase 3 — Bottom sheet de ruta real.
+  Nota: convertir `RouteResultCard` en sheet controlado con estado colapsado/expandido, resumen fijo, tabs/segmentos para `Resumen`, `Pasos` y `Barreras`, altura responsive, scroll interno estable y coordinación con `LiveRerouteToast`, alertas visuales y FABs. Mantener TTS de `RouteResultCard` y `StepList`.
+- [ ] **P.3** Fase 4 — Reporte sobre el mapa.
+  Nota: integrar `ReportSheet` como modal/sheet sobre `/map` disparado desde el FAB de reportar, reutilizando `KindSelector`, `CameraCapture` y flujo actual de `POST /report`; dejar `/report` como fallback/deep link. No agregar Gemini ni cambiar backend en esta fase.
+- [ ] **P.4** Fase 5 — Controles flotantes consistentes.
+  Nota: ordenar controles de `mi ubicación`, voz/micrófono, reportar y accesibilidad en una zona flotante estable con targets ≥48px, `aria-label`, `aria-pressed` donde aplique, sin superponerse con search bar, bottom sheet, `LiveRerouteToast` ni alertas de `HapticController`.
+- [ ] **P.5** Fase 6 — QA demo UI/UX.
+  Nota: validar mobile-first y desktop: buscar `Zona Rio`, cambiar perfiles, ver polyline/markers, probar TTS, voz, haptics, SSE/Citizen Loop, alto contraste, texto 200%, foco visible y ausencia de solapes; correr `bun run build` y registrar riesgos antes de retomar Bloque 5.
+
 ## Bloque 0 · Setup y accesos *(haz esto primero, sin código)*
 - [x] **0.1** Front vivo con mocks: `cd apps/web && bun install && bun dev` → abre `localhost:3000`, confirma que navega. Tu baseline.
   Nota: shell web levantado y navegación base verificada localmente.
