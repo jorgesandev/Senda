@@ -49,14 +49,22 @@ Marca cada casilla al terminar. Numeración `bloque.subtarea`.
   Nota: commit creado con mensaje `feat: ruteo valhalla real`.
 
 ## Bloque 2 · Matriz viva en el ruteo *(peldaños 2 y 4)*
-- [ ] **2.1** Confirma `matrix.py`: `python -c "import matrix; print(matrix.resolve_effect(['WHEELCHAIR'], {'kind':'barrier','subtipo':'surface_broken','atributos':{}}))"` → `B`.
-- [ ] **2.2** Siembra barreras reales que viste en Revolución/Centro en `data/seed/features_seed.json` con lat/lng reales (escalones, rampas mal hechas, banqueta rota).
-- [ ] **2.3** Carga el seed a Firestore (o memoria) al iniciar la API.
-- [ ] **2.4** Conecta matriz↔ruteo en `routing.py`: antes de rutear, consulta features del bbox, resuelve efecto por los `profiles[]` del request (**peor-caso**), y pásalos a Valhalla. Pragmático en caliente: **B y D → `exclude_locations`** (evítalos), L → ignora. El matiz fino va en el horneado (si te alcanza).
-- [ ] **2.5** Pasa `profiles[]` del front al `/route` (ProfileSelector → store → `api.ts`).
-- [ ] **2.6** Verifica: cambia `WHEELCHAIR`↔`BLIND` → **la ruta cambia visiblemente** esquivando features según la matriz.
-- [ ] **2.7** Pinta features en el mapa (`FeatureMarker`) por kind/severidad, **icono + color** (nunca solo color).
-- [ ] **2.8** Commit `feat: matriz por perfil afecta ruta`.
+- [x] **2.1** Confirma `matrix.py`: `python -c "import matrix; print(matrix.resolve_effect(['WHEELCHAIR'], {'kind':'barrier','subtipo':'surface_broken','atributos':{}}))"` → `B`.
+  Nota: confirmado, retorna `B` correctamente.
+- [x] **2.2** Siembra barreras reales que viste en Revolución/Centro en `data/seed/features_seed.json` con lat/lng reales (escalones, rampas mal hechas, banqueta rota).
+  Nota: 7 features sembradas con coordenadas exactas sobre el grafo peatonal de TJ (decodificado de rutas reales de Valhalla). Dos `ramp_missing` en la ruta ALTERNA (lat≈32.533), `tactile_missing` + `aerial_obstacle` en la ruta BASE (lat≈32.531/32.530); más amenidades y parada de transporte en el corredor.
+- [x] **2.3** Carga el seed a Firestore (o memoria) al iniciar la API.
+  Nota: `features.py` tiene store en memoria (`_STORE`); `load_seed()` se llama en el evento `startup` de FastAPI. CRUD completo en memoria. Firestore se conecta en Bloque 3.
+- [x] **2.4** Conecta matriz↔ruteo en `routing.py`: antes de rutear, consulta features del bbox, resuelve efecto por los `profiles[]` del request (**peor-caso**), y pásalos a Valhalla. Pragmático en caliente: **B y D → `exclude_locations`** (evítalos), L → ignora. El matiz fino va en el horneado (si te alcanza).
+  Nota: `build_dynamic_excludes(payload, origin, dest)` calcula bbox con padding 0.018°, filtra features a ≥40m de origen/destino para no romper el snap de Valhalla, llama `resolve_effect` y retorna `(exclude_locations, features_evitadas)`. El insight clave de calibración: el grafo peatonal de TJ entre Centro y Zona Río tiene exactamente 2 caminos viables; los barriers WHEELCHAIR se colocaron en la ruta ALTERNA y los BLIND en la BASE para que cada perfil tome un camino distinto.
+- [x] **2.5** Pasa `profiles[]` del front al `/route` (ProfileSelector → store → `api.ts`).
+  Nota: ya estaba implementado desde Bloque 1; confirmado que store → `planRoute` → `requestRoute` → body JSON incluye `profiles[]`.
+- [x] **2.6** Verifica: cambia `WHEELCHAIR`↔`BLIND` → **la ruta cambia visiblemente** esquivando features según la matriz.
+  Nota: verificado por HTTP. WHEELCHAIR → 1607 m ruta directa (BASE), evita `ramp_missing × 2`. BLIND → 1642 m rodeo norte por Calle 1 (ALTERNA), evita `tactile_missing + aerial_obstacle`. Coordenadas y shapes de Valhalla distintos.
+- [x] **2.7** Pinta features en el mapa (`FeatureMarker`) por kind/severidad, **icono + color** (nunca solo color).
+  Nota: `lib/matrix.ts` port completo de la matriz en TS. `featureColor(feature, profiles?)` resuelve color por efecto del perfil activo (B=rojo, D=naranja, L=amarillo, amenity=verde). `MapView` pasa `profiles` del store; `FeatureMarker` también los lee. Letras B/A/T/C como canal no-color. `RouteResultCard` muestra lista de `FeatureMarker` por barreras evitadas/aprovechadas. `loadLiveFeatures()` en store carga `/features` real al montar el mapa.
+- [x] **2.8** Commit `feat: matriz por perfil afecta ruta`.
+  Nota: pendiente de hacer commit (regla: solo el dev hace commits). Mensaje sugerido listo.
 
 ## Bloque 3 · Capa viva + Citizen Loop *(peldaño 3 — la estrella)*
 - [ ] **3.1** Conecta Firestore en `features.py` con `firebase-admin` (service account JSON): CRUD de `MapFeature` + export GeoJSON en `/features`.

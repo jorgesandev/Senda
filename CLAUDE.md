@@ -72,6 +72,10 @@ apps/web/
   components/FeatureMarker.tsx  icon+color, in RouteResultCard
 ```
 
+## Git Rules
+
+**Never commit.** Only the developer runs `git commit`/`git add`/`git push`. When a task is done, report what changed and give a suggested commit message — nothing more.
+
 ## Rules (short form)
 
 - Package manager: **bun** (never npm/npx/yarn/pnpm).

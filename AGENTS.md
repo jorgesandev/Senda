@@ -93,6 +93,10 @@ Accessibility is a core feature, not polish:
 - Build dense, operational UI for repeated use; avoid landing-page patterns.
 - Do not introduce decorative gradients, blobs, or card-inside-card layouts.
 
+## Git Rules
+
+**Never commit.** Only the developer commits. When a task is finished, report what changed and provide a suggested commit message — do not run `git commit`, `git add`, or `git push` under any circumstance.
+
 ## Verification Expectations
 
 For API/routing changes:
