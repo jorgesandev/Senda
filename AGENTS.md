@@ -2,15 +2,29 @@
 
 ## Session Start — Mandatory Reads
 
-Before touching any code, read these three files in order:
+Before touching any code, read these files **in order**:
 
 ```
+docs/status.md           ← deployed URLs, what works today, what's pending
 docs/plan_ejecucion.md   ← active block, completed tasks, what's next
 docs/SRS.md              ← product spec, data contracts, matrix rules
 README.md                ← architecture, setup, public context
 ```
 
-Do not skip. The plan file is the single source of truth for what to build next.
+Do not skip. `docs/status.md` tells you the current live state. `docs/plan_ejecucion.md` tells you what to build next.
+
+## When a Task Is Done
+
+Before reporting a task as complete, update **all three**:
+
+1. **`docs/plan_ejecucion.md`** — mark `[x]` on the completed subtask and add a `Nota:` line that explains:
+   - what was implemented
+   - any non-obvious architectural decisions
+   - file paths changed or created
+2. **`docs/status.md`** — update the relevant section to reflect the new state. Keep it as a current snapshot, not a history log.
+3. **`README.md`** — update if the public-facing description, quickstart steps, or architecture diagram changed.
+
+Never leave these three out of sync with the actual code.
 
 ## Project Intent
 
@@ -18,19 +32,20 @@ Senda is an accessible pedestrian routing app for Tijuana. Keep the implementati
 
 1. `docs/SRS.md` as the product/spec authority.
 2. `docs/plan_ejecucion.md` as the execution order.
-3. `README.md` as the public setup and project summary.
+3. `docs/status.md` as the current live state.
+4. `README.md` as the public setup and project summary.
 
 Do not add product behavior outside the SRS unless the SRS is updated in the same change.
 
 ## Current Priority
 
-Read `docs/plan_ejecucion.md` to find the current active block. Bloques 0–3 are complete.
+Read `docs/plan_ejecucion.md` to find the current active block. Bloques 0–4 are complete.
 
 ## Stack
 
-- Web: `apps/web`, Next.js 14 App Router, TypeScript, Tailwind, MapLibre, Zustand, Lucide.
+- Web: `apps/web`, Next.js 14 App Router, TypeScript, Tailwind, Google Maps JS, Zustand, Lucide.
 - API: `apps/api`, FastAPI, pydantic v2, httpx.
-- Routing: Valhalla local service in `services/valhalla`, expected at `http://localhost:8002`.
+- Routing: Valhalla — Cloud Run in production (`docs/status.md`), local Docker for dev (`services/valhalla`, port 8002).
 - Data: GeoJSON-like `MapFeature` contracts, seed data in `data/seed`.
 
 ## Local Commands
@@ -49,10 +64,10 @@ API:
 ```bash
 cd apps/api
 pip install -r requirements.txt
-uvicorn main:app --reload
+.venv/bin/uvicorn main:app --reload --port 8080
 ```
 
-Valhalla:
+Valhalla (local dev):
 
 ```bash
 docker compose -f services/valhalla/docker-compose.yml up
@@ -61,15 +76,19 @@ docker compose -f services/valhalla/docker-compose.yml up
 API smoke checks:
 
 ```bash
+# Local
 curl http://localhost:8002/status
 curl http://localhost:8080/health
+
+# Production (URLs in docs/status.md)
+curl https://senda-api-131553755517.us-central1.run.app/health
 ```
 
 Matrix sanity check:
 
 ```bash
 cd apps/api
-python -c "import matrix; print(matrix.resolve_effect(['WHEELCHAIR'], {'kind': 'barrier', 'subtipo': 'surface_broken', 'atributos': {}}))"
+.venv/bin/python -c "import matrix; print(matrix.resolve_effect(['WHEELCHAIR'], {'kind': 'barrier', 'subtipo': 'surface_broken', 'atributos': {}}))"
 ```
 
 ## Implementation Rules
@@ -79,18 +98,20 @@ python -c "import matrix; print(matrix.resolve_effect(['WHEELCHAIR'], {'kind': '
 - Do not leave TODO comments; track pending work in `docs/plan_ejecucion.md`.
 - Preserve the SRS distinction between objective feature type and profile-specific effect.
 - Multi-profile route impact uses worst-case severity.
-- Coordinates exposed to the web map should be `[lng, lat]`.
+- Coordinates exposed to the web map must be `[lng, lat]` (GeoJSON order).
 - Use `exclude_locations` for hot Valhalla avoidance in the MVP path.
+- The seed file (`data/seed/features_seed.json`) is outside the `apps/api/` Docker build context. Never rely on it being present in production — Firestore is the source of truth.
 
 ## Accessibility Requirements
 
 Accessibility is a core feature, not polish:
 
-- interactive targets should be at least 48x48px;
-- color must not be the only signal;
+- interactive targets must be at least 48x48px;
+- color must not be the only signal (always icon + label);
 - maintain visible focus, semantic labels, and keyboard operation;
 - support high contrast, scalable text, voice/TTS, and haptics where implemented;
-- avoid UI changes that make VoiceOver/TalkBack behavior worse.
+- avoid UI changes that make VoiceOver/TalkBack behavior worse;
+- `aria-live`, `role="alert"`, `aria-pressed` on all dynamic + toggle elements.
 
 ## Frontend Design Rules
 
