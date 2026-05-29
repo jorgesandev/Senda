@@ -11,6 +11,7 @@ import { useSendaStore } from '@/lib/store'
 
 export default function MapPage() {
   const activeRoute = useSendaStore((state) => state.activeRoute)
+  const showRerouteToast = useSendaStore((state) => state.showRerouteToast)
   const mapState = activeRoute ? 'routed' : 'idle'
 
   return (
@@ -29,7 +30,7 @@ export default function MapPage() {
           <div className="pointer-events-auto">{activeRoute ? <RouteResultCard route={activeRoute} /> : null}</div>
         </div>
 
-        <LiveRerouteToast visible={Boolean(activeRoute)} />
+        <LiveRerouteToast visible={showRerouteToast} />
         <Fab href="/report" label="Reportar" />
       </section>
       <BottomNav />

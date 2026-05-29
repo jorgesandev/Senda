@@ -1,12 +1,23 @@
 from __future__ import annotations
 
+import asyncio
+import uuid
+from datetime import datetime, timezone
 from typing import Annotated
 
 import httpx
 from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 
-from features import create_feature, list_features_geojson, load_seed
+from features import (
+    add_sse_client,
+    create_feature,
+    get_active_features,
+    list_features_geojson,
+    load_seed,
+    remove_sse_client,
+)
 from models import (
     FeatureKind,
     GeoJsonFeatureCollection,
@@ -53,6 +64,14 @@ async def route(payload: RouteRequest) -> RouteResponse:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
+_DEFAULT_SUBTIPO: dict[FeatureKind, str] = {
+    "barrier": "obstruction_temporary",
+    "amenity": "accessible_business",
+    "transport": "parada_camion",
+    "crossing": "crossing_unsafe",
+}
+
+
 @app.post("/report", response_model=MapFeature)
 async def report(
     image: Annotated[UploadFile | None, File()] = None,
@@ -60,24 +79,23 @@ async def report(
     lat: Annotated[float, Form()] = 32.5331,
     lng: Annotated[float, Form()] = -117.0382,
     kind: Annotated[FeatureKind, Form()] = "barrier",
+    subtipo: Annotated[str | None, Form()] = None,
 ) -> MapFeature:
-    import uuid
-    from datetime import datetime, timezone
-
     if image is not None:
         await image.close()
 
+    resolved_subtipo = subtipo or _DEFAULT_SUBTIPO.get(kind, "obstruction_temporary")
     feature = MapFeature(
         id=f"report-{kind}-{uuid.uuid4().hex[:8]}",
         kind=kind,
         categoria="obstruccion" if kind == "barrier" else kind,
-        subtipo="obstruction_temporary" if kind == "barrier" else "accessible_business",
+        subtipo=resolved_subtipo,
         atributos={"voice_text": voice_text or "", "classified": False},
         lat=lat,
         lng=lng,
         geometry=None,
         source="ciudadano",
-        confidence=0.6,
+        confidence=0.7,
         photo_url=None,
         status="activo",
         upvotes=0,
@@ -94,10 +112,39 @@ async def features(
     return await list_features_geojson(bbox, kind)
 
 
+@app.get("/features/stream")
+async def features_stream() -> StreamingResponse:
+    queue: asyncio.Queue[MapFeature] = asyncio.Queue(maxsize=100)
+    add_sse_client(queue)
+
+    async def generate():
+        try:
+            for feature in get_active_features():
+                yield f"event: initial\ndata: {feature.model_dump_json()}\n\n"
+            yield "event: ready\ndata: {}\n\n"
+
+            while True:
+                try:
+                    feature = await asyncio.wait_for(queue.get(), timeout=30.0)
+                    yield f"event: new_feature\ndata: {feature.model_dump_json()}\n\n"
+                except asyncio.TimeoutError:
+                    yield ": keepalive\n\n"
+        finally:
+            remove_sse_client(queue)
+
+    return StreamingResponse(
+        generate(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
 @app.get("/transport", response_model=TransportResponse)
 async def transport(bbox: Annotated[str | None, Query(description="minLng,minLat,maxLng,maxLat")] = None) -> TransportResponse:
-    from features import get_active_features
-
     items = get_active_features(kind="transport")
     if bbox:
         parts = [float(x) for x in bbox.split(",")]

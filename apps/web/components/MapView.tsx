@@ -95,11 +95,6 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
   const activeRoute = useSendaStore((store) => store.activeRoute)
   const liveFeatures = useSendaStore((store) => store.liveFeatures)
   const profiles = useSendaStore((store) => store.profiles)
-  const loadLiveFeatures = useSendaStore((store) => store.loadLiveFeatures)
-
-  useEffect(() => {
-    loadLiveFeatures()
-  }, [loadLiveFeatures])
 
   useEffect(() => {
     let cancelled = false

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { A11yProvider } from '@/components/AccessibilityControls'
+import { StoreInitializer } from '@/components/StoreInitializer'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
@@ -21,7 +22,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <body className={inter.className}>
-        <A11yProvider>{children}</A11yProvider>
+        <A11yProvider>
+          <StoreInitializer />
+          {children}
+        </A11yProvider>
       </body>
     </html>
   )

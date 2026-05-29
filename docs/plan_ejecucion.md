@@ -67,13 +67,14 @@ Marca cada casilla al terminar. Numeración `bloque.subtarea`.
   Nota: pendiente de hacer commit (regla: solo el dev hace commits). Mensaje sugerido listo.
 
 ## Bloque 3 · Capa viva + Citizen Loop *(peldaño 3 — la estrella)*
-- [ ] **3.1** Conecta Firestore en `features.py` con `firebase-admin` (service account JSON): CRUD de `MapFeature` + export GeoJSON en `/features`.
-- [ ] **3.2** Implementa `POST /report`: recibe imagen/voz + lat/lng + kind → guarda feature (`status: activo`) → regresa el `MapFeature`.
-- [ ] **3.3** Tiempo real en el front: el store escucha Firestore (`onSnapshot`) → `liveFeatures` se actualiza → el marker **aparece al instante**.
-- [ ] **3.4** ReportSheet + KindSelector + CameraCapture: capturar/seleccionar, ubicar con GPS, enviar.
-- [ ] **3.5** **Citizen Loop:** al reportar sobre la ruta activa → recalcula `/route` (la feature nueva entra como exclude) → segmento se marca `--route-blocked` → **ruta alterna inmediata**; `LiveRerouteToast` avisa.
+- [x] **3.1** Conecta Firestore en `features.py` con `firebase-admin` (ADC): CRUD de `MapFeature` + export GeoJSON en `/features`.
+  Nota: `firebase-admin` instalado con ADC. Firestore API no habilitada en GCP → fallback in-memory activo y silencioso. Habilitar en https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=sendamx para persistencia entre reinicios.
+- [x] **3.2** Implementa `POST /report`: recibe imagen/voz + lat/lng + kind + subtipo → guarda feature (`status: activo`) → regresa el `MapFeature`. Subtipo elegible por kind.
+- [x] **3.3** Tiempo real en el front: `StoreInitializer` en el layout root suscribe a `GET /features/stream` (SSE). Eventos `initial`/`ready`/`new_feature`; `liveFeatures` se actualiza → marker aparece al instante en el mapa.
+- [x] **3.4** ReportSheet + KindSelector + CameraCapture: KindSelector usa store (sincronizado con ReportSheet); GPS auto-fill con botón; selector de subtipo por kind; CameraCapture funcional.
+- [x] **3.5** **Citizen Loop:** `addLiveFeature` → `rerouteIfNeeded` (haversine <80m + efecto=B) → recalcula `/route` → `LiveRerouteToast` con spinner y mensaje real. `StoreInitializer` mantiene SSE vivo entre páginas, activando el loop también para reportes externos.
 - [ ] **3.6** Verifica el momento "wow" en vivo.
-- [ ] **3.7** *Fallback:* si Firestore da fricción, usa store in-memory/JSON — no sacrifiques el loop por la DB.
+- [x] **3.7** Fallback in-memory activo (Firestore falla silenciosamente, SSE sigue funcionando desde memoria).
 - [ ] **3.8** Commit `feat: citizen loop en vivo`.
 
 ## Bloque 4 · Accesibilidad total *(peldaño 5 — tu diferenciador)* 🏁
