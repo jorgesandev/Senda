@@ -148,3 +148,17 @@ async def resolve_feature(feature_id: str) -> MapFeature:
                     pass
             return feature
     raise ValueError(f"Feature {feature_id} not found")
+
+
+async def delete_feature(feature_id: str) -> bool:
+    """Hard-delete a feature (used to undo a just-created report)."""
+    global _STORE
+    before = len(_STORE)
+    _STORE = [f for f in _STORE if f.id != feature_id]
+    removed = len(_STORE) < before
+    if _DB is not None:
+        try:
+            _DB.collection("features").document(feature_id).delete()
+        except Exception:
+            pass
+    return removed

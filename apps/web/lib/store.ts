@@ -106,6 +106,7 @@ interface SendaState {
   setActiveRoute: (route: RouteResponse | null) => void
   clearActiveRoute: () => void
   addLiveFeature: (feature: MapFeature) => void
+  removeLiveFeature: (id: string) => void
   setReportKind: (kind: ReportKind) => void
   rerouteIfNeeded: (feature: MapFeature) => Promise<void>
   subscribeToFeatureStream: () => () => void
@@ -193,6 +194,9 @@ export const useSendaStore = create<SendaState>((set, get) => ({
     })
     void get().rerouteIfNeeded(feature)
   },
+
+  removeLiveFeature: (id) =>
+    set((state) => ({ liveFeatures: state.liveFeatures.filter((f) => f.id !== id) })),
 
   rerouteIfNeeded: async (feature) => {
     const { activeRoute, activeOrigin, activeDestination, profiles, showRerouteToast: alreadyShowing } = get()

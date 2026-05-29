@@ -1,12 +1,12 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { Locate, Send } from 'lucide-react'
 import { CameraCapture } from './CameraCapture'
 import { ClassificationResult } from './ClassificationResult'
 import { submitReport } from '@/lib/api'
 import { useSendaStore } from '@/lib/store'
-import type { ReportKind } from '@/lib/types'
+import type { MapFeature, ReportKind } from '@/lib/types'
 
 const SUBTIPOS: Record<ReportKind, Array<{ value: string; label: string }>> = {
   barrier: [
@@ -42,7 +42,7 @@ const SUBTIPOS: Record<ReportKind, Array<{ value: string; label: string }>> = {
 
 type GpsStatus = 'idle' | 'loading' | 'ok' | 'error'
 
-export function ReportSheet() {
+export function ReportSheet({ onSubmitted }: { onSubmitted?: (feature: MapFeature) => void } = {}) {
   const reportKind = useSendaStore((state) => state.reportKind)
   const addLiveFeature = useSendaStore((state) => state.addLiveFeature)
 
@@ -60,7 +60,7 @@ export function ReportSheet() {
     ? subtipo
     : currentSubtipos[0].value
 
-  function getGpsLocation() {
+  const getGpsLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setGpsStatus('error')
       return
@@ -75,7 +75,12 @@ export function ReportSheet() {
       () => setGpsStatus('error'),
       { timeout: 8000, enableHighAccuracy: true }
     )
-  }
+  }, [])
+
+  // Por defecto, el reporte usa la ubicación GPS real para coords exactas.
+  useEffect(() => {
+    getGpsLocation()
+  }, [getGpsLocation])
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -90,7 +95,11 @@ export function ReportSheet() {
         subtipo: resolvedSubtipo,
       })
       addLiveFeature(feature)
-      setSent(true)
+      if (onSubmitted) {
+        onSubmitted(feature)
+      } else {
+        setSent(true)
+      }
     } finally {
       setSending(false)
     }

@@ -13,6 +13,7 @@ from fastapi.responses import StreamingResponse
 from features import (
     add_sse_client,
     create_feature,
+    delete_feature,
     get_active_features,
     list_features_geojson,
     load_seed,
@@ -110,6 +111,14 @@ async def features(
     kind: Annotated[FeatureKind | None, Query()] = None,
 ) -> GeoJsonFeatureCollection:
     return await list_features_geojson(bbox, kind)
+
+
+@app.delete("/features/{feature_id}")
+async def remove_feature(feature_id: str) -> dict[str, str]:
+    removed = await delete_feature(feature_id)
+    if not removed:
+        raise HTTPException(status_code=404, detail="Feature not found")
+    return {"deleted": feature_id}
 
 
 @app.get("/features/stream")

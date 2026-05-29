@@ -1,9 +1,12 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Check, X } from 'lucide-react'
 import { KindSelector } from './KindSelector'
 import { ReportSheet } from './ReportSheet'
+import { deleteReport } from '@/lib/api'
+import { useSendaStore } from '@/lib/store'
+import type { MapFeature } from '@/lib/types'
 
 interface MapReportSheetProps {
   open: boolean
@@ -12,6 +15,14 @@ interface MapReportSheetProps {
 
 export function MapReportSheet({ open, onClose }: MapReportSheetProps) {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
+  const removeLiveFeature = useSendaStore((state) => state.removeLiveFeature)
+  const [submitted, setSubmitted] = useState<MapFeature | null>(null)
+  const [undoing, setUndoing] = useState(false)
+
+  // Cada vez que se abre, arranca limpio (sin pantalla de éxito previa).
+  useEffect(() => {
+    if (open) setSubmitted(null)
+  }, [open])
 
   useEffect(() => {
     if (!open) return
@@ -29,6 +40,26 @@ export function MapReportSheet({ open, onClose }: MapReportSheetProps) {
   }, [open, onClose])
 
   if (!open) return null
+
+  function handleOk() {
+    setSubmitted(null)
+    onClose()
+  }
+
+  async function handleUndo() {
+    if (!submitted) return
+    setUndoing(true)
+    removeLiveFeature(submitted.id)
+    try {
+      await deleteReport(submitted.id)
+    } catch {
+      // si falla el borrado remoto, igual lo quitamos del mapa local
+    } finally {
+      setUndoing(false)
+      setSubmitted(null)
+      onClose()
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-[60]" role="presentation">
@@ -49,7 +80,7 @@ export function MapReportSheet({ open, onClose }: MapReportSheetProps) {
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.12em] text-brand">Capa viva</p>
             <h2 id="map-report-title" className="text-2xl font-bold">
-              Reportar en este mapa
+              {submitted ? 'Reporte generado' : 'Reportar en este mapa'}
             </h2>
           </div>
           <button
@@ -63,10 +94,35 @@ export function MapReportSheet({ open, onClose }: MapReportSheetProps) {
           </button>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-[300px_minmax(0,1fr)]">
-          <KindSelector />
-          <ReportSheet />
-        </div>
+        {submitted ? (
+          <div className="px-2 py-8 text-center" role="status" aria-live="polite">
+            <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-100">
+              <Check aria-hidden="true" size={36} className="text-emerald-600" />
+            </div>
+            <h3 className="mt-4 text-xl font-bold">¡Reporte generado!</h3>
+            <p className="mx-auto mt-2 max-w-md text-muted">
+              Tu reporte entró a la capa viva y ya aparece en el mapa. Si hay una ruta activa cercana, se recalculará automáticamente.
+            </p>
+            <div className="mx-auto mt-6 flex max-w-md flex-col gap-2 sm:flex-row-reverse">
+              <button type="button" className="btn-primary flex-1" onClick={handleOk} disabled={undoing}>
+                OK
+              </button>
+              <button
+                type="button"
+                className="touch-target inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full border border-red-300 bg-white px-4 font-bold text-red-600 transition hover:bg-red-50 disabled:opacity-60"
+                onClick={handleUndo}
+                disabled={undoing}
+              >
+                {undoing ? 'Deshaciendo…' : 'Cancelar (deshacer)'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="grid gap-3 md:grid-cols-[300px_minmax(0,1fr)]">
+            <KindSelector />
+            <ReportSheet onSubmitted={setSubmitted} />
+          </div>
+        )}
       </section>
     </div>
   )

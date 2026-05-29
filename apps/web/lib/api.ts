@@ -159,6 +159,13 @@ export async function submitReport(input: {
   return response.json() as Promise<MapFeature>
 }
 
+export async function deleteReport(id: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/features/${encodeURIComponent(id)}`, { method: 'DELETE' })
+  if (!response.ok && response.status !== 404) {
+    throw new Error(`Delete failed: ${response.status}`)
+  }
+}
+
 export async function getFeatures(bbox?: string, kind?: string): Promise<GeoJsonFeatureCollection> {
   const params = new URLSearchParams()
   if (bbox) params.set('bbox', bbox)
