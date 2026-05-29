@@ -69,7 +69,7 @@ curl -s -X POST http://localhost:8080/route \
 ## Arquitectura
 
 ```
-apps/web        Next.js 14 App Router — mapa, ruteo, reportes, accesibilidad
+apps/web        Next.js 14 App Router — mapa, bottom sheet de ruta, reportes, accesibilidad
 apps/api        FastAPI — /route, /features, /features/stream (SSE), /report
 services/       Valhalla con tiles reales de Tijuana
 data/seed/      Features sembradas (barreras y amenidades en Av. Revolución)
@@ -83,7 +83,7 @@ Usuario abre el mapa → escribe destino (texto o voz) → ajusta perfiles
   → API geocodifica → consulta features del bbox
   → matrix.resolve_effect (peor caso multi-perfil)
   → Valhalla route con exclude_locations para barreras B
-  → mapa dibuja ruta + markers → TTS narra resultado
+  → mapa dibuja ruta + markers → bottom sheet resume ruta/pasos/barreras → TTS narra resultado
 
 Ciudadano reporta barrera (foto + GPS)
   → POST /report → Firestore → SSE broadcast

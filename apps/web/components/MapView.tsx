@@ -89,6 +89,7 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
   const mapRef = useRef<google.maps.Map | null>(null)
   const routeCasingRef = useRef<google.maps.Polyline | null>(null)
   const routeLineRef = useRef<google.maps.Polyline | null>(null)
+  const userMarkerRef = useRef<google.maps.Marker | null>(null)
   const markerRefs = useRef<google.maps.Marker[]>([])
   const [googleApi, setGoogleApi] = useState<GoogleApi | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -192,6 +193,45 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
 
     fitRoute(map, google, activeRoute)
   }, [activeRoute, googleApi, liveFeatures, profiles])
+
+  useEffect(() => {
+    const map = mapRef.current
+    const google = googleApi
+    if (!map || !google) return
+    const activeMap = map
+    const activeGoogle = google
+
+    function handleCenterMap(event: Event) {
+      const detail = (event as CustomEvent<{ lat: number; lng: number }>).detail
+      if (!detail || typeof detail.lat !== 'number' || typeof detail.lng !== 'number') return
+
+      const position = { lat: detail.lat, lng: detail.lng }
+      activeMap.panTo(position)
+      activeMap.setZoom(Math.max(activeMap.getZoom() ?? 15, 16))
+
+      if (!userMarkerRef.current) {
+        userMarkerRef.current = new activeGoogle.maps.Marker({
+          map: activeMap,
+          position,
+          title: 'Mi ubicación',
+          icon: {
+            path: activeGoogle.maps.SymbolPath.CIRCLE,
+            fillColor: '#2563EB',
+            fillOpacity: 1,
+            scale: 8,
+            strokeColor: '#FFFFFF',
+            strokeWeight: 3
+          },
+          zIndex: 40
+        })
+      } else {
+        userMarkerRef.current.setPosition(position)
+      }
+    }
+
+    window.addEventListener('senda:center-map', handleCenterMap)
+    return () => window.removeEventListener('senda:center-map', handleCenterMap)
+  }, [googleApi])
 
   return (
     <section className="relative h-full min-h-[540px] overflow-hidden bg-map" aria-label="Mapa accesible de Senda">

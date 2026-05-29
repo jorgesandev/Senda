@@ -1,8 +1,8 @@
 'use client'
 
-import { Fab } from '@/components/Fab'
 import { HapticController } from '@/components/HapticController'
 import { LiveRerouteToast } from '@/components/LiveRerouteToast'
+import { MapFloatingControls } from '@/components/MapFloatingControls'
 import { MapView } from '@/components/MapView'
 import { RoutePlanner } from '@/components/RoutePlanner'
 import { RouteResultCard } from '@/components/RouteResultCard'
@@ -24,15 +24,17 @@ export default function MapPage() {
           <RoutePlanner />
         </div>
 
-        <div className="pointer-events-none absolute inset-x-3 bottom-3 z-30 md:left-4 md:right-auto md:w-[420px]">
-          <div className="pointer-events-auto max-h-[42dvh] overflow-hidden rounded-t-2xl md:max-h-[50dvh] md:rounded-lg">
+        <div className="absolute right-3 top-[calc(env(safe-area-inset-top)+13rem)] z-20 md:right-4 md:top-4">
+          <MapFloatingControls />
+        </div>
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 md:inset-x-auto md:bottom-4 md:left-4 md:w-[430px]">
+          <div className="pointer-events-auto">
             {activeRoute ? <RouteResultCard route={activeRoute} /> : null}
           </div>
         </div>
 
         <LiveRerouteToast visible={showRerouteToast} />
-
-        <Fab href="/report" label="Reportar" />
       </section>
     </main>
   )

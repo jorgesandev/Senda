@@ -6,7 +6,7 @@
 
 ## Última actualización
 
-**2026-05-29** — Polish UI/UX Fase 1-2 aplicado; Fases 3-6 agregadas al plan antes de Bloque 5. Backend desplegado en GCP.
+**2026-05-29** — Polish UI/UX Fases 1, 2, 3 y 5 aplicadas; Fase 4 y QA demo pendientes antes de Bloque 5. Backend desplegado en GCP.
 
 ---
 
@@ -75,8 +75,8 @@ Ver `docs/plan_ejecucion.md` para detalle de tareas.
 - Google Maps JS con estilo oscuro personalizado
 - Markers por kind/severidad con icono + color (nunca solo color)
 - Polyline de ruta verde con casing blanco
-- `FeatureMarker` en `RouteResultCard` con barreras evitadas/aprovechadas
-- `/map` es ahora la superficie principal full-screen: search bar compacta arriba, chips de perfil compactos, origen colapsable, micrófono integrado y resultado de ruta flotante sin `AppHeader`/`BottomNav` encima del mapa.
+- `RouteResultCard` es bottom sheet colapsable con tabs `Resumen` / `Pasos` / `Barreras`, TTS y `FeatureMarker` para barreras evitadas/aprovechadas
+- `/map` es ahora la superficie principal full-screen: search bar compacta arriba, chips de perfil compactos, origen colapsable, controles flotantes para ubicación/voz/reporte/accesibilidad y resultado de ruta en bottom sheet sin `AppHeader`/`BottomNav` encima del mapa.
 
 ---
 
@@ -84,7 +84,7 @@ Ver `docs/plan_ejecucion.md` para detalle de tareas.
 
 | Bloque | Qué | Prioridad |
 |---|---|---|
-| Polish UI/UX P.2-P.5 | Bottom sheet de ruta, reporte sobre mapa, controles flotantes, QA demo | P0 demo |
+| Polish UI/UX P.3/P.5 | Reporte sobre mapa y QA demo | P0 demo |
 | 5 | Visión Gemini: clasificar fotos de reportes | P1 |
 | 9 | Deploy final: Lighthouse a11y=100, slide research campo, README limpio | P0 pitch |
 | 4.7 | Demo a ciegas en vivo (operación por voz+haptic con ojos cerrados) | P0 pitch |

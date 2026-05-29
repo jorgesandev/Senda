@@ -1,9 +1,7 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import { Accessibility, Brain, Ear, Eye, Glasses, LocateFixed, Navigation, PersonStanding, Search, Settings2 } from 'lucide-react'
-import { AccessibilityControls } from './AccessibilityControls'
-import { VoiceController } from './VoiceController'
+import { Accessibility, Brain, Ear, Eye, Glasses, LocateFixed, Navigation, PersonStanding, Search } from 'lucide-react'
 import { useSendaStore } from '@/lib/store'
 import type { Profile } from '@/lib/types'
 
@@ -22,7 +20,6 @@ export function RoutePlanner() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showOrigin, setShowOrigin] = useState(false)
-  const [showA11y, setShowA11y] = useState(false)
   const planRoute = useSendaStore((state) => state.planRoute)
   const profiles = useSendaStore((state) => state.profiles)
   const toggleProfile = useSendaStore((state) => state.toggleProfile)
@@ -62,10 +59,6 @@ export function RoutePlanner() {
             />
           </div>
         </div>
-        <VoiceController
-          showPanel={false}
-          className="!h-12 !w-12 shadow-none ring-1 ring-slate-200"
-        />
         <button
           type="submit"
           className="touch-target inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-brand px-4 font-bold text-white shadow-[0_8px_20px_rgba(37,99,235,0.28)] transition hover:brightness-95 disabled:opacity-60"
@@ -91,15 +84,6 @@ export function RoutePlanner() {
         <p className="min-w-0 flex-1 truncate text-sm font-semibold text-muted" aria-live="polite">
           {origin}
         </p>
-        <button
-          type="button"
-          className="touch-target grid h-12 w-12 place-items-center rounded-full text-muted hover:bg-surface hover:text-text"
-          aria-label={showA11y ? 'Ocultar controles de accesibilidad' : 'Mostrar controles de accesibilidad'}
-          aria-expanded={showA11y}
-          onClick={() => setShowA11y((open) => !open)}
-        >
-          <Settings2 aria-hidden="true" size={19} />
-        </button>
       </div>
 
       {showOrigin ? (
@@ -117,12 +101,6 @@ export function RoutePlanner() {
             placeholder="Origen"
             onChange={(event) => setOrigin(event.target.value)}
           />
-        </div>
-      ) : null}
-
-      {showA11y ? (
-        <div className="rounded-2xl border border-slate-200 bg-white p-2" aria-label="Ajustes de accesibilidad">
-          <AccessibilityControls />
         </div>
       ) : null}
 

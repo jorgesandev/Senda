@@ -7,12 +7,12 @@ Marca cada casilla al terminar. Numeración `bloque.subtarea`.
 ## Polish UI/UX pre-Bloque 5
 - [x] **P.1** Fase 1-2 map-first: `/map` full-screen, `RoutePlanner` compacto tipo top search bar, sin `AppHeader`/`BottomNav` en la superficie principal ni micrófono duplicado.
   Nota: se reorganizó `apps/web/app/map/page.tsx` para dejar el mapa como superficie dominante; se compactó `apps/web/components/RoutePlanner.tsx` con destino principal, origen colapsable, chips de perfil y `VoiceController` integrado; se ajustaron `apps/web/components/VoiceController.tsx` y `apps/web/components/MapView.tsx` para soportar el nuevo shell sin cambiar ruteo, matriz, SSE, TTS, haptics ni reportes.
-- [ ] **P.2** Fase 3 — Bottom sheet de ruta real.
-  Nota: convertir `RouteResultCard` en sheet controlado con estado colapsado/expandido, resumen fijo, tabs/segmentos para `Resumen`, `Pasos` y `Barreras`, altura responsive, scroll interno estable y coordinación con `LiveRerouteToast`, alertas visuales y FABs. Mantener TTS de `RouteResultCard` y `StepList`.
+- [x] **P.2** Fase 3 — Bottom sheet de ruta real.
+  Nota: `apps/web/components/RouteResultCard.tsx` ahora es un bottom sheet colapsable/expandible con resumen fijo, tabs `Resumen`/`Pasos`/`Barreras`, scroll interno estable y métricas compactas. Se mantuvo TTS automático, botón "Leer" y `StepList` sin cambiar API ni matriz. `apps/web/app/map/page.tsx` posiciona el sheet en la parte inferior del mapa.
 - [ ] **P.3** Fase 4 — Reporte sobre el mapa.
   Nota: integrar `ReportSheet` como modal/sheet sobre `/map` disparado desde el FAB de reportar, reutilizando `KindSelector`, `CameraCapture` y flujo actual de `POST /report`; dejar `/report` como fallback/deep link. No agregar Gemini ni cambiar backend en esta fase.
-- [ ] **P.4** Fase 5 — Controles flotantes consistentes.
-  Nota: ordenar controles de `mi ubicación`, voz/micrófono, reportar y accesibilidad en una zona flotante estable con targets ≥48px, `aria-label`, `aria-pressed` donde aplique, sin superponerse con search bar, bottom sheet, `LiveRerouteToast` ni alertas de `HapticController`.
+- [x] **P.4** Fase 5 — Controles flotantes consistentes.
+  Nota: se creó `apps/web/components/MapFloatingControls.tsx` con controles flotantes para centrar en mi ubicación, voz/micrófono, reportar y accesibilidad. `apps/web/components/MapView.tsx` escucha el evento `senda:center-map` para pan/zoom y marker de ubicación. `RoutePlanner` quedó sin mic/accesibilidad duplicados. Reportar sigue navegando a `/report`; la Fase 4 queda pendiente.
 - [ ] **P.5** Fase 6 — QA demo UI/UX.
   Nota: validar mobile-first y desktop: buscar `Zona Rio`, cambiar perfiles, ver polyline/markers, probar TTS, voz, haptics, SSE/Citizen Loop, alto contraste, texto 200%, foco visible y ausencia de solapes; correr `bun run build` y registrar riesgos antes de retomar Bloque 5.
 
