@@ -1,8 +1,9 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Accessibility, Brain, Ear, Eye, Glasses, LocateFixed, Menu, Mic, Navigation, PersonStanding, Search } from 'lucide-react'
+import { Accessibility, Brain, Ear, Eye, Glasses, LocateFixed, Menu, Mic, MicOff, Navigation, PersonStanding, Search } from 'lucide-react'
 import { AccessibilityControls } from './AccessibilityControls'
 import { createVoiceController } from '@/lib/voice'
 import { useSendaStore } from '@/lib/store'
@@ -20,12 +21,15 @@ const PROFILE_OPTIONS: Array<{ profile: Profile; label: string; short: string; i
 const voice = createVoiceController()
 
 export function RoutePlanner() {
+  const router = useRouter()
   const [origin, setOrigin] = useState('Mi ubicacion')
   const [destination, setDestination] = useState('Zona Rio')
   const [isLoading, setIsLoading] = useState(false)
+  const [isListening, setIsListening] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const planRoute = useSendaStore((state) => state.planRoute)
+  const setReportKind = useSendaStore((state) => state.setReportKind)
   const profiles = useSendaStore((state) => state.profiles)
   const toggleProfile = useSendaStore((state) => state.toggleProfile)
 
@@ -42,10 +46,30 @@ export function RoutePlanner() {
     }
   }
 
-  async function fillDestinationByVoice() {
-    const command = await voice.listenOnce()
-    const match = command.transcript.match(/(?:a|hacia)\s+(.+?)(?:\s+por|\s+en|$)/i)
-    setDestination(match?.[1] ?? command.transcript)
+  async function handleVoiceCommand() {
+    if (isListening) return
+    setIsListening(true)
+    setError(null)
+    try {
+      const command = await voice.listenOnce()
+      if (command.intent === 'plan_route' && command.destination) {
+        setDestination(command.destination)
+        setIsLoading(true)
+        await planRoute(origin, command.destination)
+      } else if (command.intent === 'report_feature') {
+        setReportKind('barrier')
+        router.push('/report')
+      } else if (command.intent === 'open_map') {
+        router.push('/map')
+      } else if (command.destination) {
+        setDestination(command.destination)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error de reconocimiento de voz')
+    } finally {
+      setIsListening(false)
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -73,8 +97,16 @@ export function RoutePlanner() {
               placeholder="Buscar destino"
               onChange={(event) => setDestination(event.target.value)}
             />
-            <button type="button" className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-brand hover:bg-white" aria-label="Buscar por voz" onClick={fillDestinationByVoice}>
-              <Mic aria-hidden="true" size={20} />
+            <button
+              type="button"
+              className={`grid h-10 w-10 shrink-0 place-items-center rounded-full transition focus-visible:outline ${
+                isListening ? 'animate-pulse text-red-500' : 'text-brand hover:bg-white'
+              }`}
+              aria-label={isListening ? 'Escuchando comando de voz…' : 'Activar comando de voz'}
+              aria-pressed={isListening}
+              onClick={handleVoiceCommand}
+            >
+              {isListening ? <MicOff aria-hidden="true" size={20} /> : <Mic aria-hidden="true" size={20} />}
             </button>
           </div>
         </div>

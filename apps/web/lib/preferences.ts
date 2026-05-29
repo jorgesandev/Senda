@@ -5,10 +5,14 @@ export interface DetectedPreferences {
 }
 
 export function detectPreferences(): DetectedPreferences {
-  // Production reads media queries for contrast, motion, and color scheme.
+  if (typeof window === 'undefined') {
+    return { prefersContrast: false, prefersReducedMotion: false, prefersDarkScheme: false }
+  }
   return {
-    prefersContrast: false,
-    prefersReducedMotion: false,
-    prefersDarkScheme: false
+    prefersContrast:
+      window.matchMedia('(prefers-contrast: more)').matches ||
+      window.matchMedia('(forced-colors: active)').matches,
+    prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    prefersDarkScheme: window.matchMedia('(prefers-color-scheme: dark)').matches
   }
 }

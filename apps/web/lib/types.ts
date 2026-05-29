@@ -80,4 +80,6 @@ export interface A11yPrefs {
   highContrast: boolean
   textScale: 100 | 125 | 150 | 200
   reducedMotion: boolean
+  vibrateOnly: boolean    // DEAF_HOH: sólo vibración + visual, sin audio
+  narratorMuted: boolean  // silencia el TTS narrator
 }

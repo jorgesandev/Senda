@@ -2,10 +2,12 @@
 
 import { create } from 'zustand'
 import { MOCK_FEATURES, requestRoute } from './api'
+import { detectPreferences } from './preferences'
 import { resolveEffect } from './matrix'
 import type { A11yPrefs, MapFeature, Profile, ReportKind, RouteResponse, Situational } from './types'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080'
+const PREFS_KEY = 'senda_a11y_prefs'
 
 function haversineMeters(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const R = 6_371_000
@@ -24,6 +26,34 @@ function normalizeLocation(value: string, fallback: { lat: number; lng: number }
     return fallback
   }
   return normalized
+}
+
+function loadStoredPrefs(): Partial<A11yPrefs> {
+  if (typeof window === 'undefined') return {}
+  try {
+    const raw = localStorage.getItem(PREFS_KEY)
+    if (!raw) return {}
+    return JSON.parse(raw) as Partial<A11yPrefs>
+  } catch {
+    return {}
+  }
+}
+
+function persistPrefs(prefs: A11yPrefs) {
+  if (typeof window === 'undefined') return
+  try {
+    localStorage.setItem(PREFS_KEY, JSON.stringify(prefs))
+  } catch {
+    // quota exceeded or private mode — ignore
+  }
+}
+
+const DEFAULT_PREFS: A11yPrefs = {
+  highContrast: false,
+  textScale: 100,
+  reducedMotion: false,
+  vibrateOnly: false,
+  narratorMuted: false
 }
 
 interface SendaState {
@@ -46,6 +76,9 @@ interface SendaState {
   subscribeToFeatureStream: () => () => void
   setHighContrast: (enabled: boolean) => void
   setTextScale: (scale: A11yPrefs['textScale']) => void
+  setNarratorMuted: (muted: boolean) => void
+  setVibrateOnly: (enabled: boolean) => void
+  loadPrefsFromStorage: () => void
 }
 
 export const useSendaStore = create<SendaState>((set, get) => ({
@@ -57,11 +90,7 @@ export const useSendaStore = create<SendaState>((set, get) => ({
   liveFeatures: MOCK_FEATURES,
   reportKind: 'barrier',
   showRerouteToast: false,
-  a11yPrefs: {
-    highContrast: false,
-    textScale: 100,
-    reducedMotion: false
-  },
+  a11yPrefs: DEFAULT_PREFS,
 
   toggleProfile: (profile) =>
     set((state) => ({
@@ -173,12 +202,46 @@ export const useSendaStore = create<SendaState>((set, get) => ({
   },
 
   setHighContrast: (enabled) =>
-    set((state) => ({
-      a11yPrefs: { ...state.a11yPrefs, highContrast: enabled }
-    })),
+    set((state) => {
+      const prefs = { ...state.a11yPrefs, highContrast: enabled }
+      persistPrefs(prefs)
+      return { a11yPrefs: prefs }
+    }),
 
   setTextScale: (scale) =>
-    set((state) => ({
-      a11yPrefs: { ...state.a11yPrefs, textScale: scale }
-    }))
+    set((state) => {
+      const prefs = { ...state.a11yPrefs, textScale: scale }
+      persistPrefs(prefs)
+      return { a11yPrefs: prefs }
+    }),
+
+  setNarratorMuted: (muted) =>
+    set((state) => {
+      const prefs = { ...state.a11yPrefs, narratorMuted: muted }
+      persistPrefs(prefs)
+      return { a11yPrefs: prefs }
+    }),
+
+  // vibrateOnly implica silenciar el narrador automáticamente
+  setVibrateOnly: (enabled) =>
+    set((state) => {
+      const prefs = { ...state.a11yPrefs, vibrateOnly: enabled, narratorMuted: enabled ? true : state.a11yPrefs.narratorMuted }
+      persistPrefs(prefs)
+      return { a11yPrefs: prefs }
+    }),
+
+  loadPrefsFromStorage: () => {
+    const stored = loadStoredPrefs()
+    const detected = detectPreferences()
+    const prefs: A11yPrefs = {
+      highContrast:   stored.highContrast   ?? detected.prefersContrast,
+      textScale:      stored.textScale      ?? 100,
+      reducedMotion:  stored.reducedMotion  ?? detected.prefersReducedMotion,
+      vibrateOnly:    stored.vibrateOnly    ?? false,
+      narratorMuted:  stored.narratorMuted  ?? false
+    }
+    // vibrateOnly implica narrador silenciado
+    if (prefs.vibrateOnly) prefs.narratorMuted = true
+    set({ a11yPrefs: prefs })
+  }
 }))
