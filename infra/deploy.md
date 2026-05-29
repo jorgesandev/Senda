@@ -5,7 +5,7 @@
 - Target: Vercel.
 - Package manager: Bun.
 - Build command: `bun run build`.
-- Runtime environment: set `NEXT_PUBLIC_API_URL` and optional `NEXT_PUBLIC_MAP_STYLE_URL`.
+- Runtime environment: set `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`.
 
 ## API
 

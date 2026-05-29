@@ -21,8 +21,8 @@ Marca cada casilla al terminar. Numeración `bloque.subtarea`.
   Nota: referencia de costo confirmada: `$7 USD` por `1000` peticiones.
 - [x] **0.8** Firebase: console.firebase.google.com → agrega proyecto (liga al mismo GCP) → crea **Firestore** (modo test para el hackathon) → Project settings → Service accounts → **genera la llave JSON**.
   Nota: Firebase ligado a `sendamx`; autenticación local lista por ADC con cuota de proyecto (`gcloud auth application-default set-quota-project sendamx`).
-- [x] **0.9** Llena los `.env` (web y api) desde `infra/.env.example`: llaves, `NEXT_PUBLIC_API_URL=http://localhost:8080`, y un `NEXT_PUBLIC_MAP_STYLE_URL` de un estilo MapLibre oscuro (ej. estilo dark de demotiles/MapTiler).
-  Nota: `.env` creados en `apps/web` y `apps/api`; backend apuntando a `FIREBASE_CREDENTIALS_JSON=/Users/alejandro/.config/gcloud/application_default_credentials.json`.
+- [x] **0.9** Llena los `.env` (web y api) desde `infra/.env.example`: llaves, `NEXT_PUBLIC_API_URL=http://localhost:8080`, y `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` para el mapa visual.
+  Nota: `.env` creados en `apps/web` y `apps/api`; backend apuntando a `FIREBASE_CREDENTIALS_JSON=/Users/alejandro/.config/gcloud/application_default_credentials.json`; mapa visual migrado a Google Maps JS API.
 - [x] **0.10** `git init`, repo **público** en GitHub, commit `chore: scaffold verificado`.
   Nota: repo ya inicializado y público; commit de scaffold existente (mensaje equivalente con `scaffold`).
 
