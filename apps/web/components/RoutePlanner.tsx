@@ -16,7 +16,7 @@ const PROFILE_OPTIONS: Array<{ profile: Profile; label: string; short: string; i
 
 export function RoutePlanner() {
   const [origin, setOrigin] = useState('Mi ubicacion')
-  const [destination, setDestination] = useState('Zona Rio')
+  const [destination, setDestination] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showOrigin, setShowOrigin] = useState(false)
