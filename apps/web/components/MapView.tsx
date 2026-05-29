@@ -98,6 +98,7 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
   const previewRoute = useSendaStore((store) => store.previewRoute)
   const liveFeatures = useSendaStore((store) => store.liveFeatures)
   const profiles = useSendaStore((store) => store.profiles)
+  const hasStartedRoute = useSendaStore((store) => store.hasStartedRoute)
 
   useEffect(() => {
     let cancelled = false
@@ -169,8 +170,14 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
       routeLineRef.current.setPath(path)
     }
 
+    // Una vez iniciado el viaje, la ruta ya esquivó las barreras: solo mostramos
+    // lo positivo (amenidades y transporte). En preview/planeación se ve todo.
+    const visibleFeatures = hasStartedRoute
+      ? liveFeatures.filter((feature) => feature.kind === 'amenity' || feature.kind === 'transport')
+      : liveFeatures
+
     markerRefs.current.forEach((marker) => marker.setMap(null))
-    markerRefs.current = liveFeatures.map((feature) => {
+    markerRefs.current = visibleFeatures.map((feature) => {
       const color = featureColor(feature, profiles)
       return new google.maps.Marker({
         map,
@@ -220,7 +227,7 @@ export function MapView({ state = 'idle' }: { state?: MapViewState }) {
     }
 
     fitRoute(map, google, routeToDraw)
-  }, [activeRoute, previewRoute, googleApi, liveFeatures, profiles])
+  }, [activeRoute, previewRoute, googleApi, liveFeatures, profiles, hasStartedRoute])
 
   useEffect(() => {
     const map = mapRef.current

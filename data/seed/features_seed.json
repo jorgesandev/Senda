@@ -4,7 +4,9 @@
     "kind": "barrier",
     "categoria": "cambio_nivel",
     "subtipo": "ramp_missing",
-    "atributos": { "descripcion": "Esquina sin rebaje de banqueta ni senalizacion" },
+    "atributos": {
+      "descripcion": "Esquina sin rebaje de banqueta ni senalizacion"
+    },
     "lat": 32.532911,
     "lng": -117.035062,
     "geometry": null,
@@ -20,7 +22,9 @@
     "kind": "barrier",
     "categoria": "cambio_nivel",
     "subtipo": "ramp_missing",
-    "atributos": { "descripcion": "Banqueta alta sin rampa de acceso, 16cm de diferencia de nivel" },
+    "atributos": {
+      "descripcion": "Banqueta alta sin rampa de acceso, 16cm de diferencia de nivel"
+    },
     "lat": 32.533051,
     "lng": -117.033513,
     "geometry": null,
@@ -36,7 +40,9 @@
     "kind": "barrier",
     "categoria": "guia_orientacion",
     "subtipo": "tactile_missing",
-    "atributos": { "descripcion": "Tramo largo sin guia podotactil, superficie lisa sin diferenciacion" },
+    "atributos": {
+      "descripcion": "Tramo largo sin guia podotactil, superficie lisa sin diferenciacion"
+    },
     "lat": 32.531393,
     "lng": -117.031681,
     "geometry": null,
@@ -52,7 +58,10 @@
     "kind": "barrier",
     "categoria": "obstruccion",
     "subtipo": "aerial_obstacle",
-    "atributos": { "descripcion": "Lona publicitaria a 1.74m de altura, zona de riesgo para ciegos", "altura_cm": 174 },
+    "atributos": {
+      "descripcion": "Lona publicitaria a 1.74m de altura, zona de riesgo para ciegos",
+      "altura_cm": 174
+    },
     "lat": 32.530126,
     "lng": -117.028412,
     "geometry": null,
@@ -68,7 +77,11 @@
     "kind": "amenity",
     "categoria": "alivio",
     "subtipo": "rest_point",
-    "atributos": { "sombra": true, "banca": true, "descripcion": "Banca techada en corredor peatonal" },
+    "atributos": {
+      "sombra": true,
+      "banca": true,
+      "descripcion": "Banca techada en corredor peatonal"
+    },
     "lat": 32.529984,
     "lng": -117.024649,
     "geometry": null,
@@ -84,7 +97,9 @@
     "kind": "amenity",
     "categoria": "acceso",
     "subtipo": "good_ramp",
-    "atributos": { "descripcion": "Rampa de acceso de doble ancho, bien mantenida" },
+    "atributos": {
+      "descripcion": "Rampa de acceso de doble ancho, bien mantenida"
+    },
     "lat": 32.530657,
     "lng": -117.025591,
     "geometry": null,
@@ -116,5 +131,1509 @@
     "status": "activo",
     "upvotes": 2,
     "created_at": "2026-05-29T12:07:00.000Z"
+  },
+  {
+    "id": "mock-amenity-000",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "elevator",
+    "atributos": {
+      "nombre": "Plaza Rio Tijuana - Elevador central",
+      "descripcion": "Plaza Rio Tijuana - Elevador central"
+    },
+    "lat": 32.5283,
+    "lng": -117.0205,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.88,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 2,
+    "created_at": "2026-05-28T09:00:00Z"
+  },
+  {
+    "id": "mock-amenity-001",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "accessible_restroom",
+    "atributos": {
+      "nombre": "Plaza Rio Tijuana - Bano accesible",
+      "descripcion": "Plaza Rio Tijuana - Bano accesible"
+    },
+    "lat": 32.5281,
+    "lng": -117.021,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.9,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 9,
+    "created_at": "2026-05-28T09:07:00Z"
+  },
+  {
+    "id": "mock-amenity-002",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "accessible_parking",
+    "atributos": {
+      "nombre": "Plaza Rio Tijuana - Estacionamiento accesible",
+      "descripcion": "Plaza Rio Tijuana - Estacionamiento accesible"
+    },
+    "lat": 32.5288,
+    "lng": -117.0199,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.79,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 25,
+    "created_at": "2026-05-28T09:14:00Z"
+  },
+  {
+    "id": "mock-amenity-003",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "good_ramp",
+    "atributos": {
+      "nombre": "Plaza Rio Tijuana - Rampa acceso norte",
+      "descripcion": "Plaza Rio Tijuana - Rampa acceso norte"
+    },
+    "lat": 32.5279,
+    "lng": -117.0216,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.76,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 25,
+    "created_at": "2026-05-28T09:21:00Z"
+  },
+  {
+    "id": "mock-amenity-004",
+    "kind": "amenity",
+    "categoria": "servicio",
+    "subtipo": "accessible_business",
+    "atributos": {
+      "nombre": "Starbucks Plaza Rio",
+      "descripcion": "Starbucks Plaza Rio"
+    },
+    "lat": 32.5277,
+    "lng": -117.02,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.94,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 4,
+    "created_at": "2026-05-28T09:28:00Z"
+  },
+  {
+    "id": "mock-amenity-005",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "accessible_restroom",
+    "atributos": {
+      "nombre": "CECUT - Sanitario accesible",
+      "descripcion": "CECUT - Sanitario accesible"
+    },
+    "lat": 32.5258,
+    "lng": -117.0283,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.87,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 3,
+    "created_at": "2026-05-28T09:35:00Z"
+  },
+  {
+    "id": "mock-amenity-006",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "good_ramp",
+    "atributos": {
+      "nombre": "CECUT - Rampa de acceso principal",
+      "descripcion": "CECUT - Rampa de acceso principal"
+    },
+    "lat": 32.526,
+    "lng": -117.0278,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.75,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 8,
+    "created_at": "2026-05-28T09:42:00Z"
+  },
+  {
+    "id": "mock-amenity-007",
+    "kind": "amenity",
+    "categoria": "guia",
+    "subtipo": "tactile_present",
+    "atributos": {
+      "nombre": "CECUT - Guia podotactil en entrada",
+      "descripcion": "CECUT - Guia podotactil en entrada"
+    },
+    "lat": 32.5256,
+    "lng": -117.0286,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.79,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 21,
+    "created_at": "2026-05-28T09:49:00Z"
+  },
+  {
+    "id": "mock-amenity-008",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "elevator",
+    "atributos": {
+      "nombre": "Hospital Angeles Tijuana - Elevador",
+      "descripcion": "Hospital Angeles Tijuana - Elevador"
+    },
+    "lat": 32.5238,
+    "lng": -117.0179,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.75,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 8,
+    "created_at": "2026-05-28T09:56:00Z"
+  },
+  {
+    "id": "mock-amenity-009",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "accessible_parking",
+    "atributos": {
+      "nombre": "Hospital Angeles - Estacionamiento accesible",
+      "descripcion": "Hospital Angeles - Estacionamiento accesible"
+    },
+    "lat": 32.5235,
+    "lng": -117.0184,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.9,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 24,
+    "created_at": "2026-05-28T10:03:00Z"
+  },
+  {
+    "id": "mock-amenity-010",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "accessible_restroom",
+    "atributos": {
+      "nombre": "Macroplaza del Rio - Bano accesible",
+      "descripcion": "Macroplaza del Rio - Bano accesible"
+    },
+    "lat": 32.5316,
+    "lng": -117.0249,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.86,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 9,
+    "created_at": "2026-05-28T10:10:00Z"
+  },
+  {
+    "id": "mock-amenity-011",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "step_free_access",
+    "atributos": {
+      "nombre": "Macroplaza del Rio - Acceso a nivel",
+      "descripcion": "Macroplaza del Rio - Acceso a nivel"
+    },
+    "lat": 32.5314,
+    "lng": -117.0254,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.84,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 10,
+    "created_at": "2026-05-28T10:17:00Z"
+  },
+  {
+    "id": "mock-amenity-012",
+    "kind": "amenity",
+    "categoria": "servicio",
+    "subtipo": "accessible_business",
+    "atributos": {
+      "nombre": "Mercado Hidalgo - Local Accesible Verificado",
+      "descripcion": "Mercado Hidalgo - Local Accesible Verificado"
+    },
+    "lat": 32.5247,
+    "lng": -117.0188,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.92,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 2,
+    "created_at": "2026-05-28T10:24:00Z"
+  },
+  {
+    "id": "mock-amenity-013",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "rest_point",
+    "atributos": {
+      "nombre": "Paseo de los Heroes - Punto de descanso",
+      "descripcion": "Paseo de los Heroes - Punto de descanso"
+    },
+    "lat": 32.53,
+    "lng": -117.0228,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.91,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 7,
+    "created_at": "2026-05-28T10:31:00Z"
+  },
+  {
+    "id": "mock-amenity-014",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "good_ramp",
+    "atributos": {
+      "nombre": "Catedral de Tijuana - Rampa lateral",
+      "descripcion": "Catedral de Tijuana - Rampa lateral"
+    },
+    "lat": 32.5325,
+    "lng": -117.0376,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.89,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 12,
+    "created_at": "2026-05-28T10:38:00Z"
+  },
+  {
+    "id": "mock-amenity-015",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "rest_point",
+    "atributos": {
+      "nombre": "Parque Teniente Guerrero - Banca con sombra",
+      "descripcion": "Parque Teniente Guerrero - Banca con sombra"
+    },
+    "lat": 32.5294,
+    "lng": -117.0405,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.8,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 8,
+    "created_at": "2026-05-28T10:45:00Z"
+  },
+  {
+    "id": "mock-amenity-016",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "shade_water",
+    "atributos": {
+      "nombre": "Parque Teniente Guerrero - Bebedero",
+      "descripcion": "Parque Teniente Guerrero - Bebedero"
+    },
+    "lat": 32.5292,
+    "lng": -117.0408,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.95,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 12,
+    "created_at": "2026-05-28T10:52:00Z"
+  },
+  {
+    "id": "mock-amenity-017",
+    "kind": "amenity",
+    "categoria": "servicio",
+    "subtipo": "accessible_business",
+    "atributos": {
+      "nombre": "Av. Revolucion - Comercio Accesible Verificado",
+      "descripcion": "Av. Revolucion - Comercio Accesible Verificado"
+    },
+    "lat": 32.532,
+    "lng": -117.0398,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.76,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 14,
+    "created_at": "2026-05-28T10:59:00Z"
+  },
+  {
+    "id": "mock-amenity-018",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "accessible_restroom",
+    "atributos": {
+      "nombre": "Plaza Santa Cecilia - Bano accesible",
+      "descripcion": "Plaza Santa Cecilia - Bano accesible"
+    },
+    "lat": 32.5318,
+    "lng": -117.039,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.76,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 13,
+    "created_at": "2026-05-28T11:06:00Z"
+  },
+  {
+    "id": "mock-amenity-019",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "good_ramp",
+    "atributos": {
+      "nombre": "UABC Otay - Rampa de biblioteca",
+      "descripcion": "UABC Otay - Rampa de biblioteca"
+    },
+    "lat": 32.5305,
+    "lng": -116.9667,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.87,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 27,
+    "created_at": "2026-05-28T11:13:00Z"
+  },
+  {
+    "id": "mock-amenity-020",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "rest_point",
+    "atributos": {
+      "nombre": "UABC Otay - Area de descanso",
+      "descripcion": "UABC Otay - Area de descanso"
+    },
+    "lat": 32.5309,
+    "lng": -116.9662,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.75,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 16,
+    "created_at": "2026-05-28T11:20:00Z"
+  },
+  {
+    "id": "mock-amenity-021",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "accessible_restroom",
+    "atributos": {
+      "nombre": "Aeropuerto Internacional TJ - Sanitario accesible",
+      "descripcion": "Aeropuerto Internacional TJ - Sanitario accesible"
+    },
+    "lat": 32.5411,
+    "lng": -116.9706,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.86,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 14,
+    "created_at": "2026-05-28T11:27:00Z"
+  },
+  {
+    "id": "mock-amenity-022",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "elevator",
+    "atributos": {
+      "nombre": "Aeropuerto Internacional TJ - Elevador terminal",
+      "descripcion": "Aeropuerto Internacional TJ - Elevador terminal"
+    },
+    "lat": 32.5413,
+    "lng": -116.9701,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.76,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 11,
+    "created_at": "2026-05-28T11:34:00Z"
+  },
+  {
+    "id": "mock-amenity-023",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "accessible_parking",
+    "atributos": {
+      "nombre": "Macroplaza Otay - Estacionamiento accesible",
+      "descripcion": "Macroplaza Otay - Estacionamiento accesible"
+    },
+    "lat": 32.53,
+    "lng": -116.961,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.92,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 21,
+    "created_at": "2026-05-28T11:41:00Z"
+  },
+  {
+    "id": "mock-amenity-024",
+    "kind": "amenity",
+    "categoria": "servicio",
+    "subtipo": "accessible_business",
+    "atributos": {
+      "nombre": "Calimax Otay - Acceso a nivel",
+      "descripcion": "Calimax Otay - Acceso a nivel"
+    },
+    "lat": 32.5295,
+    "lng": -116.962,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.93,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 13,
+    "created_at": "2026-05-28T11:48:00Z"
+  },
+  {
+    "id": "mock-amenity-025",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "elevator",
+    "atributos": {
+      "nombre": "Estadio Caliente - Elevador de gradas",
+      "descripcion": "Estadio Caliente - Elevador de gradas"
+    },
+    "lat": 32.5067,
+    "lng": -116.9707,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.87,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 24,
+    "created_at": "2026-05-28T11:55:00Z"
+  },
+  {
+    "id": "mock-amenity-026",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "accessible_parking",
+    "atributos": {
+      "nombre": "Estadio Caliente - Cajones accesibles",
+      "descripcion": "Estadio Caliente - Cajones accesibles"
+    },
+    "lat": 32.507,
+    "lng": -116.97,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.76,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 23,
+    "created_at": "2026-05-28T12:02:00Z"
+  },
+  {
+    "id": "mock-amenity-027",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "accessible_restroom",
+    "atributos": {
+      "nombre": "Plaza Mundo Divertido - Bano accesible",
+      "descripcion": "Plaza Mundo Divertido - Bano accesible"
+    },
+    "lat": 32.5006,
+    "lng": -116.9806,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.79,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 11,
+    "created_at": "2026-05-28T12:09:00Z"
+  },
+  {
+    "id": "mock-amenity-028",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "step_free_access",
+    "atributos": {
+      "nombre": "Hospital General de Tijuana - Acceso a nivel",
+      "descripcion": "Hospital General de Tijuana - Acceso a nivel"
+    },
+    "lat": 32.51,
+    "lng": -116.995,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.96,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 9,
+    "created_at": "2026-05-28T12:16:00Z"
+  },
+  {
+    "id": "mock-amenity-029",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "accessible_restroom",
+    "atributos": {
+      "nombre": "Hospital General de Tijuana - Sanitario accesible",
+      "descripcion": "Hospital General de Tijuana - Sanitario accesible"
+    },
+    "lat": 32.5103,
+    "lng": -116.9945,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.93,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 14,
+    "created_at": "2026-05-28T12:23:00Z"
+  },
+  {
+    "id": "mock-amenity-030",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "elevator",
+    "atributos": {
+      "nombre": "Hospital General de Tijuana - Elevador",
+      "descripcion": "Hospital General de Tijuana - Elevador"
+    },
+    "lat": 32.5097,
+    "lng": -116.9953,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.8,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 22,
+    "created_at": "2026-05-28T12:30:00Z"
+  },
+  {
+    "id": "mock-amenity-031",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "rest_point",
+    "atributos": {
+      "nombre": "Playas de Tijuana - Banca de malecon",
+      "descripcion": "Playas de Tijuana - Banca de malecon"
+    },
+    "lat": 32.5277,
+    "lng": -117.1186,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.92,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 7,
+    "created_at": "2026-05-28T12:37:00Z"
+  },
+  {
+    "id": "mock-amenity-032",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "good_ramp",
+    "atributos": {
+      "nombre": "Faro de Playas - Rampa al mirador",
+      "descripcion": "Faro de Playas - Rampa al mirador"
+    },
+    "lat": 32.5347,
+    "lng": -117.1234,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.82,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 8,
+    "created_at": "2026-05-28T12:44:00Z"
+  },
+  {
+    "id": "mock-amenity-033",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "shade_water",
+    "atributos": {
+      "nombre": "Malecon Playas - Sombra y bebedero",
+      "descripcion": "Malecon Playas - Sombra y bebedero"
+    },
+    "lat": 32.527,
+    "lng": -117.119,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.89,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 24,
+    "created_at": "2026-05-28T12:51:00Z"
+  },
+  {
+    "id": "mock-amenity-034",
+    "kind": "amenity",
+    "categoria": "acceso",
+    "subtipo": "step_free_access",
+    "atributos": {
+      "nombre": "Garita El Chaparral - Acceso peatonal a nivel",
+      "descripcion": "Garita El Chaparral - Acceso peatonal a nivel"
+    },
+    "lat": 32.543,
+    "lng": -117.0297,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.95,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 22,
+    "created_at": "2026-05-28T12:58:00Z"
+  },
+  {
+    "id": "mock-amenity-035",
+    "kind": "amenity",
+    "categoria": "guia",
+    "subtipo": "tactile_present",
+    "atributos": {
+      "nombre": "Garita El Chaparral - Guia podotactil",
+      "descripcion": "Garita El Chaparral - Guia podotactil"
+    },
+    "lat": 32.5428,
+    "lng": -117.0301,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.76,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 22,
+    "created_at": "2026-05-28T13:05:00Z"
+  },
+  {
+    "id": "mock-amenity-036",
+    "kind": "amenity",
+    "categoria": "guia",
+    "subtipo": "audio_signal_present",
+    "atributos": {
+      "nombre": "Garita El Chaparral - Cruce con senal de audio",
+      "descripcion": "Garita El Chaparral - Cruce con senal de audio"
+    },
+    "lat": 32.5432,
+    "lng": -117.0294,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.78,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 25,
+    "created_at": "2026-05-28T13:12:00Z"
+  },
+  {
+    "id": "mock-barrier-000",
+    "kind": "barrier",
+    "categoria": "superficie",
+    "subtipo": "surface_broken",
+    "atributos": {
+      "descripcion": "Banqueta cuarteada sobre Calle 1ra, Zona Norte"
+    },
+    "lat": 32.536,
+    "lng": -117.042,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.79,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 16,
+    "created_at": "2026-05-28T13:19:00Z"
+  },
+  {
+    "id": "mock-barrier-001",
+    "kind": "barrier",
+    "categoria": "cambio_nivel",
+    "subtipo": "step_curb",
+    "atributos": {
+      "descripcion": "Escalon sin rebaje en Calle Coahuila"
+    },
+    "lat": 32.5345,
+    "lng": -117.045,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.82,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 22,
+    "created_at": "2026-05-28T13:26:00Z"
+  },
+  {
+    "id": "mock-barrier-002",
+    "kind": "barrier",
+    "categoria": "obstruccion",
+    "subtipo": "obstruction_temporary",
+    "atributos": {
+      "descripcion": "Puesto ambulante bloqueando la banqueta"
+    },
+    "lat": 32.5355,
+    "lng": -117.0405,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.89,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 9,
+    "created_at": "2026-05-28T13:33:00Z"
+  },
+  {
+    "id": "mock-barrier-003",
+    "kind": "barrier",
+    "categoria": "ancho",
+    "subtipo": "path_narrow",
+    "atributos": {
+      "descripcion": "Paso peatonal angosto junto a comercio",
+      "ancho_cm": 78
+    },
+    "lat": 32.535,
+    "lng": -117.044,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.89,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 28,
+    "created_at": "2026-05-28T13:40:00Z"
+  },
+  {
+    "id": "mock-barrier-004",
+    "kind": "barrier",
+    "categoria": "cambio_nivel",
+    "subtipo": "step_curb",
+    "atributos": {
+      "descripcion": "Escalon pronunciado en Calle 3ra"
+    },
+    "lat": 32.53,
+    "lng": -117.043,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.91,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 3,
+    "created_at": "2026-05-28T13:47:00Z"
+  },
+  {
+    "id": "mock-barrier-005",
+    "kind": "barrier",
+    "categoria": "superficie",
+    "subtipo": "surface_broken",
+    "atributos": {
+      "descripcion": "Banqueta cuarteada en Calle 5ta"
+    },
+    "lat": 32.5282,
+    "lng": -117.0452,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.79,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 3,
+    "created_at": "2026-05-28T13:54:00Z"
+  },
+  {
+    "id": "mock-barrier-006",
+    "kind": "barrier",
+    "categoria": "pendiente",
+    "subtipo": "steep_grade",
+    "atributos": {
+      "descripcion": "Pendiente pronunciada en Col. Libertad",
+      "grado_pct": 14
+    },
+    "lat": 32.54,
+    "lng": -117.015,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.92,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 14,
+    "created_at": "2026-05-28T14:01:00Z"
+  },
+  {
+    "id": "mock-barrier-007",
+    "kind": "barrier",
+    "categoria": "superficie",
+    "subtipo": "surface_unpaved",
+    "atributos": {
+      "descripcion": "Tramo sin pavimentar en Col. Libertad"
+    },
+    "lat": 32.542,
+    "lng": -117.012,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.8,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 8,
+    "created_at": "2026-05-28T14:08:00Z"
+  },
+  {
+    "id": "mock-barrier-008",
+    "kind": "barrier",
+    "categoria": "cambio_nivel",
+    "subtipo": "step_curb",
+    "atributos": {
+      "descripcion": "Escalones de concreto sin pasamanos"
+    },
+    "lat": 32.541,
+    "lng": -117.018,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.94,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 20,
+    "created_at": "2026-05-28T14:15:00Z"
+  },
+  {
+    "id": "mock-barrier-009",
+    "kind": "barrier",
+    "categoria": "pendiente",
+    "subtipo": "steep_grade",
+    "atributos": {
+      "descripcion": "Subida empinada en Camino Verde",
+      "grado_pct": 16
+    },
+    "lat": 32.49,
+    "lng": -116.98,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.93,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 12,
+    "created_at": "2026-05-28T14:22:00Z"
+  },
+  {
+    "id": "mock-barrier-010",
+    "kind": "barrier",
+    "categoria": "superficie",
+    "subtipo": "surface_loose",
+    "atributos": {
+      "descripcion": "Grava suelta sobre la banqueta"
+    },
+    "lat": 32.488,
+    "lng": -116.982,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.79,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 17,
+    "created_at": "2026-05-28T14:29:00Z"
+  },
+  {
+    "id": "mock-barrier-011",
+    "kind": "barrier",
+    "categoria": "cambio_nivel",
+    "subtipo": "ramp_missing",
+    "atributos": {
+      "descripcion": "Esquina sin rampa de acceso"
+    },
+    "lat": 32.491,
+    "lng": -116.979,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.83,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 22,
+    "created_at": "2026-05-28T14:36:00Z"
+  },
+  {
+    "id": "mock-barrier-012",
+    "kind": "barrier",
+    "categoria": "superficie",
+    "subtipo": "surface_broken",
+    "atributos": {
+      "descripcion": "Banqueta destruida en Blvd. Sanchez Taboada"
+    },
+    "lat": 32.486,
+    "lng": -116.95,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.84,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 10,
+    "created_at": "2026-05-28T14:43:00Z"
+  },
+  {
+    "id": "mock-barrier-013",
+    "kind": "barrier",
+    "categoria": "obstruccion",
+    "subtipo": "obstruction_permanent",
+    "atributos": {
+      "descripcion": "Poste en medio de la banqueta"
+    },
+    "lat": 32.487,
+    "lng": -116.951,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.77,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 25,
+    "created_at": "2026-05-28T14:50:00Z"
+  },
+  {
+    "id": "mock-barrier-014",
+    "kind": "barrier",
+    "categoria": "guia_orientacion",
+    "subtipo": "tactile_missing",
+    "atributos": {
+      "descripcion": "Avenida sin guia podotactil"
+    },
+    "lat": 32.4855,
+    "lng": -116.9495,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.86,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 10,
+    "created_at": "2026-05-28T14:57:00Z"
+  },
+  {
+    "id": "mock-barrier-015",
+    "kind": "barrier",
+    "categoria": "superficie",
+    "subtipo": "surface_broken",
+    "atributos": {
+      "descripcion": "Pavimento roto en Blvd. Diaz Ordaz"
+    },
+    "lat": 32.502,
+    "lng": -116.965,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.9,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 15,
+    "created_at": "2026-05-28T15:04:00Z"
+  },
+  {
+    "id": "mock-barrier-016",
+    "kind": "barrier",
+    "categoria": "obstruccion",
+    "subtipo": "aerial_obstacle",
+    "atributos": {
+      "descripcion": "Letrero bajo a 1.78m",
+      "altura_cm": 178
+    },
+    "lat": 32.5015,
+    "lng": -116.966,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.94,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 14,
+    "created_at": "2026-05-28T15:11:00Z"
+  },
+  {
+    "id": "mock-barrier-017",
+    "kind": "barrier",
+    "categoria": "cambio_nivel",
+    "subtipo": "step_curb",
+    "atributos": {
+      "descripcion": "Escalon alto en Otay Universidad"
+    },
+    "lat": 32.532,
+    "lng": -116.958,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.82,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 6,
+    "created_at": "2026-05-28T15:18:00Z"
+  },
+  {
+    "id": "mock-barrier-018",
+    "kind": "barrier",
+    "categoria": "obstruccion",
+    "subtipo": "obstruction_temporary",
+    "atributos": {
+      "descripcion": "Vehiculo estacionado sobre banqueta"
+    },
+    "lat": 32.531,
+    "lng": -116.96,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.85,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 4,
+    "created_at": "2026-05-28T15:25:00Z"
+  },
+  {
+    "id": "mock-barrier-019",
+    "kind": "barrier",
+    "categoria": "guia_orientacion",
+    "subtipo": "signage_poor",
+    "atributos": {
+      "descripcion": "Senalizacion deficiente en cruce"
+    },
+    "lat": 32.533,
+    "lng": -116.955,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.91,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 5,
+    "created_at": "2026-05-28T15:32:00Z"
+  },
+  {
+    "id": "mock-barrier-020",
+    "kind": "barrier",
+    "categoria": "pendiente",
+    "subtipo": "steep_grade",
+    "atributos": {
+      "descripcion": "Calle empinada en Col. Chapultepec",
+      "grado_pct": 11
+    },
+    "lat": 32.515,
+    "lng": -117.005,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.77,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 7,
+    "created_at": "2026-05-28T15:39:00Z"
+  },
+  {
+    "id": "mock-barrier-021",
+    "kind": "barrier",
+    "categoria": "superficie",
+    "subtipo": "surface_slippery",
+    "atributos": {
+      "descripcion": "Superficie resbalosa cuando llueve"
+    },
+    "lat": 32.516,
+    "lng": -117.004,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.91,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 15,
+    "created_at": "2026-05-28T15:46:00Z"
+  },
+  {
+    "id": "mock-barrier-022",
+    "kind": "barrier",
+    "categoria": "obstruccion",
+    "subtipo": "obstruction_temporary",
+    "atributos": {
+      "descripcion": "Materiales de obra en la banqueta"
+    },
+    "lat": 32.527,
+    "lng": -117.015,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.87,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 14,
+    "created_at": "2026-05-28T15:53:00Z"
+  },
+  {
+    "id": "mock-barrier-023",
+    "kind": "barrier",
+    "categoria": "ancho",
+    "subtipo": "path_narrow",
+    "atributos": {
+      "descripcion": "Banqueta angosta junto a obra",
+      "ancho_cm": 72
+    },
+    "lat": 32.525,
+    "lng": -117.016,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.82,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 16,
+    "created_at": "2026-05-28T16:00:00Z"
+  },
+  {
+    "id": "mock-barrier-024",
+    "kind": "barrier",
+    "categoria": "superficie",
+    "subtipo": "surface_unpaved",
+    "atributos": {
+      "descripcion": "Tramo sin pavimentar cerca del malecon"
+    },
+    "lat": 32.523,
+    "lng": -117.115,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.86,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 19,
+    "created_at": "2026-05-28T16:07:00Z"
+  },
+  {
+    "id": "mock-barrier-025",
+    "kind": "barrier",
+    "categoria": "cambio_nivel",
+    "subtipo": "ramp_missing",
+    "atributos": {
+      "descripcion": "Esquina sin rampa en Playas"
+    },
+    "lat": 32.53,
+    "lng": -117.12,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.93,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 2,
+    "created_at": "2026-05-28T16:14:00Z"
+  },
+  {
+    "id": "mock-barrier-026",
+    "kind": "barrier",
+    "categoria": "superficie",
+    "subtipo": "surface_broken",
+    "atributos": {
+      "descripcion": "Banqueta rota en El Florido"
+    },
+    "lat": 32.47,
+    "lng": -116.9,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.89,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 5,
+    "created_at": "2026-05-28T16:21:00Z"
+  },
+  {
+    "id": "mock-barrier-027",
+    "kind": "barrier",
+    "categoria": "pendiente",
+    "subtipo": "steep_grade",
+    "atributos": {
+      "descripcion": "Pendiente en Col. El Florido",
+      "grado_pct": 13
+    },
+    "lat": 32.475,
+    "lng": -116.91,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.89,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 19,
+    "created_at": "2026-05-28T16:28:00Z"
+  },
+  {
+    "id": "mock-barrier-028",
+    "kind": "barrier",
+    "categoria": "obstruccion",
+    "subtipo": "obstruction_permanent",
+    "atributos": {
+      "descripcion": "Arbol invade el paso peatonal"
+    },
+    "lat": 32.472,
+    "lng": -116.905,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.91,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 26,
+    "created_at": "2026-05-28T16:35:00Z"
+  },
+  {
+    "id": "mock-barrier-029",
+    "kind": "barrier",
+    "categoria": "obstruccion",
+    "subtipo": "obstruction_temporary",
+    "atributos": {
+      "descripcion": "Contenedor de basura bloqueando el paso"
+    },
+    "lat": 32.518,
+    "lng": -116.99,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.88,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 5,
+    "created_at": "2026-05-28T16:42:00Z"
+  },
+  {
+    "id": "mock-barrier-030",
+    "kind": "barrier",
+    "categoria": "guia_orientacion",
+    "subtipo": "tactile_missing",
+    "atributos": {
+      "descripcion": "Parada sin guia podotactil"
+    },
+    "lat": 32.505,
+    "lng": -116.975,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.8,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 7,
+    "created_at": "2026-05-28T16:49:00Z"
+  },
+  {
+    "id": "mock-barrier-031",
+    "kind": "barrier",
+    "categoria": "guia_orientacion",
+    "subtipo": "signage_poor",
+    "atributos": {
+      "descripcion": "Senalizacion pobre en cruce escolar"
+    },
+    "lat": 32.495,
+    "lng": -116.97,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.84,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 25,
+    "created_at": "2026-05-28T16:56:00Z"
+  },
+  {
+    "id": "mock-barrier-032",
+    "kind": "barrier",
+    "categoria": "ancho",
+    "subtipo": "path_narrow",
+    "atributos": {
+      "descripcion": "Paso angosto bajo el puente",
+      "ancho_cm": 75
+    },
+    "lat": 32.545,
+    "lng": -117.025,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.93,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 10,
+    "created_at": "2026-05-28T17:03:00Z"
+  },
+  {
+    "id": "mock-crossing-000",
+    "kind": "crossing",
+    "categoria": "cruce",
+    "subtipo": "crossing",
+    "atributos": {
+      "nombre": "Sanchez Taboada y Independencia",
+      "semaforo_peatonal": true,
+      "tiene_audio": false,
+      "tiene_podotactil": false,
+      "rampas_esquina": true
+    },
+    "lat": 32.528,
+    "lng": -117.022,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.95,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 26,
+    "created_at": "2026-05-28T17:10:00Z"
+  },
+  {
+    "id": "mock-crossing-001",
+    "kind": "crossing",
+    "categoria": "cruce",
+    "subtipo": "crossing",
+    "atributos": {
+      "nombre": "Cruce UABC Otay",
+      "semaforo_peatonal": true,
+      "tiene_audio": false,
+      "tiene_podotactil": false,
+      "rampas_esquina": true
+    },
+    "lat": 32.5305,
+    "lng": -116.9665,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.78,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 5,
+    "created_at": "2026-05-28T17:17:00Z"
+  },
+  {
+    "id": "mock-crossing-002",
+    "kind": "crossing",
+    "categoria": "cruce",
+    "subtipo": "crossing",
+    "atributos": {
+      "nombre": "Cruce Estadio Caliente",
+      "semaforo_peatonal": false,
+      "tiene_audio": false,
+      "tiene_podotactil": false,
+      "rampas_esquina": false
+    },
+    "lat": 32.507,
+    "lng": -116.971,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.93,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 11,
+    "created_at": "2026-05-28T17:24:00Z"
+  },
+  {
+    "id": "mock-crossing-003",
+    "kind": "crossing",
+    "categoria": "cruce",
+    "subtipo": "crossing",
+    "atributos": {
+      "nombre": "Cruce Calle 2da Centro",
+      "semaforo_peatonal": true,
+      "tiene_audio": false,
+      "tiene_podotactil": false,
+      "rampas_esquina": false
+    },
+    "lat": 32.532,
+    "lng": -117.0405,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.93,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 18,
+    "created_at": "2026-05-28T17:31:00Z"
+  },
+  {
+    "id": "mock-crossing-004",
+    "kind": "crossing",
+    "categoria": "cruce",
+    "subtipo": "crossing",
+    "atributos": {
+      "nombre": "Cruce Garita Otay",
+      "semaforo_peatonal": true,
+      "tiene_audio": true,
+      "tiene_podotactil": true,
+      "rampas_esquina": true
+    },
+    "lat": 32.541,
+    "lng": -116.9395,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.87,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 6,
+    "created_at": "2026-05-28T17:38:00Z"
+  },
+  {
+    "id": "mock-crossing-005",
+    "kind": "crossing",
+    "categoria": "cruce",
+    "subtipo": "crossing",
+    "atributos": {
+      "nombre": "Cruce Plaza Mundo Divertido",
+      "semaforo_peatonal": true,
+      "tiene_audio": false,
+      "tiene_podotactil": false,
+      "rampas_esquina": true
+    },
+    "lat": 32.5006,
+    "lng": -116.981,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.82,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 7,
+    "created_at": "2026-05-28T17:45:00Z"
+  },
+  {
+    "id": "mock-transport-000",
+    "kind": "transport",
+    "categoria": "parada",
+    "subtipo": "Parada Plaza Rio - Ruta Centro",
+    "atributos": {
+      "accessibility_features": {
+        "has_ramp": true,
+        "low_floor": true,
+        "visual_announcements": true,
+        "priority_seat": true
+      }
+    },
+    "lat": 32.5283,
+    "lng": -117.0205,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.86,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 26,
+    "created_at": "2026-05-28T17:52:00Z"
+  },
+  {
+    "id": "mock-transport-001",
+    "kind": "transport",
+    "categoria": "parada",
+    "subtipo": "Parada UABC Otay - Ruta Otay-Centro",
+    "atributos": {
+      "accessibility_features": {
+        "has_ramp": true,
+        "audio_announcements": true,
+        "priority_seat": true
+      }
+    },
+    "lat": 32.5305,
+    "lng": -116.9667,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.94,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 2,
+    "created_at": "2026-05-28T17:59:00Z"
+  },
+  {
+    "id": "mock-transport-002",
+    "kind": "transport",
+    "categoria": "parada",
+    "subtipo": "Parada Estadio Caliente - Ruta La Mesa",
+    "atributos": {
+      "accessibility_features": {
+        "visual_announcements": true,
+        "priority_seat": true,
+        "low_floor": true
+      }
+    },
+    "lat": 32.5067,
+    "lng": -116.971,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.87,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 17,
+    "created_at": "2026-05-28T18:06:00Z"
   }
 ]

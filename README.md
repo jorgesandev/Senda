@@ -73,7 +73,7 @@ curl -s -X POST http://localhost:8080/route \
 apps/web        Next.js 14 App Router — mapa, bottom sheet de ruta, reportes, accesibilidad
 apps/api        FastAPI — /route, /features, /features/stream (SSE), /report
 services/       Valhalla con tiles reales de Tijuana
-data/seed/      Features sembradas (barreras y amenidades en Av. Revolucion)
+data/seed/      Features sembradas citywide (generate_seed.py: amenidades en landmarks reales, barreras, cruces y transporte) + corredor calibrado
 docs/           SRS, arquitectura
 ```
 

@@ -106,6 +106,28 @@ def _haversine_m(a: LatLng, b: LatLng) -> float:
     return 2 * r * math.asin(math.sqrt(h))
 
 
+def _segment_distance_m(point: LatLng, a: LatLng, b: LatLng) -> float:
+    """Distance from a point to the origin->destination segment (equirect approx)."""
+    lat0 = math.radians((a.lat + b.lat) / 2)
+
+    def xy(p: LatLng) -> tuple[float, float]:
+        return (math.radians(p.lng) * math.cos(lat0) * 6_371_000, math.radians(p.lat) * 6_371_000)
+
+    ax, ay = xy(a)
+    bx, by = xy(b)
+    px, py = xy(point)
+    dx, dy = bx - ax, by - ay
+    length_sq = dx * dx + dy * dy
+    t = 0.0 if length_sq == 0 else max(0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / length_sq))
+    return math.hypot(px - (ax + t * dx), py - (ay + t * dy))
+
+
+# Las barreras se excluyen por bbox (robustez del ruteo), pero solo se REPORTAN
+# como "evitadas" las que estan dentro de este pasillo del trayecto O->D, para
+# no inflar la lista con barreras lejanas de toda la ciudad.
+REPORT_CORRIDOR_M = 250
+
+
 def build_dynamic_excludes(
     payload: RouteRequest,
     origin: LatLng,
@@ -137,9 +159,42 @@ def build_dynamic_excludes(
         effect = resolve_effect(list(payload.profiles), feature)
         if effect in ("B", "D"):
             excludes.append({"lat": feature.lat, "lon": feature.lng})
-            evitadas.append(feature)
+            if _segment_distance_m(loc, origin, destination) < REPORT_CORRIDOR_M:
+                evitadas.append(feature)
 
     return excludes, evitadas
+
+
+ON_ROUTE_THRESHOLD_M = 60
+
+
+def build_amenities_on_route(
+    coords: list[tuple[float, float]],
+    profiles: list[str],
+) -> list[MapFeature]:
+    """Return amenities relevant to the profiles within ~45m of the route shape."""
+    if not coords or not profiles:
+        return []
+
+    lngs = [c[0] for c in coords]
+    lats = [c[1] for c in coords]
+    pad = 0.002
+    bbox = (min(lngs) - pad, min(lats) - pad, max(lngs) + pad, max(lats) + pad)
+    candidates = get_active_features(bbox, kind="amenity")
+
+    aprovechadas: list[MapFeature] = []
+    for feature in candidates:
+        if resolve_effect(profiles, feature) == "·":
+            continue
+        loc = LatLng(lat=feature.lat, lng=feature.lng)
+        near = any(
+            _haversine_m(loc, LatLng(lat=lat, lng=lng)) < ON_ROUTE_THRESHOLD_M
+            for lng, lat in coords
+        )
+        if near:
+            aprovechadas.append(feature)
+
+    return aprovechadas
 
 
 async def request_valhalla_route(payload: RouteRequest) -> RouteResponse:
@@ -168,11 +223,12 @@ async def request_valhalla_route(payload: RouteRequest) -> RouteResponse:
     distance_m, eta_min = _summary(trip)
     raw_steps = _extract_steps(trip)
     translated_steps = await translate_steps(raw_steps)
+    features_aprovechadas = build_amenities_on_route(coords, list(payload.profiles))
     return RouteResponse(
         coords=coords,
         distance_m=distance_m,
         eta_min=eta_min,
         features_evitadas=features_evitadas,
-        features_aprovechadas=[],
+        features_aprovechadas=features_aprovechadas,
         steps=translated_steps,
     )
