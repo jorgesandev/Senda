@@ -1,0 +1,120 @@
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #FFFFFF;
+  --surface: #F8FAFC;
+  --text: #0F172A;
+  --text-muted: #475569;
+  --brand: #2563EB;
+  --map-bg: #0B1220;
+  --route-ok: #10B981;
+  --route-blocked: #F43F5E;
+  --sev-low: #FACC15;
+  --sev-med: #FB923C;
+  --sev-high: #EF4444;
+  --focus: #3B82F6;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+[data-contrast="high"] {
+  --bg: #FFFFFF;
+  --surface: #EEF2FF;
+  --text: #020617;
+  --text-muted: #1E293B;
+  --brand: #1D4ED8;
+  --map-bg: #020617;
+  --route-ok: #047857;
+  --route-blocked: #BE123C;
+  --sev-low: #A16207;
+  --sev-med: #C2410C;
+  --sev-high: #B91C1C;
+  --focus: #000000;
+}
+
+[data-text-scale="125"] {
+  font-size: 125%;
+}
+
+[data-text-scale="150"] {
+  font-size: 150%;
+}
+
+[data-text-scale="200"] {
+  font-size: 200%;
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  outline-color: var(--focus);
+  outline-offset: 3px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@layer components {
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  .btn-primary {
+    @apply touch-target inline-flex items-center justify-center gap-2 rounded-md bg-brand px-5 py-3 text-base font-semibold text-white shadow-panel transition hover:brightness-95;
+  }
+
+  .btn-secondary {
+    @apply touch-target inline-flex items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-3 text-base font-semibold text-text transition hover:bg-surface;
+  }
+
+  .panel {
+    @apply rounded-lg border border-slate-200 bg-white shadow-panel;
+  }
+
+  .map-panel {
+    @apply rounded-lg border border-slate-800 bg-map text-white;
+  }
+}

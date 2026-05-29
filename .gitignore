@@ -1,0 +1,31 @@
+.DS_Store
+
+# Node and Bun
+node_modules/
+.next/
+out/
+dist/
+.turbo/
+.bun/
+bun.lockb
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# GIS and Valhalla artifacts
+*.pbf
+valhalla_tiles/
+
+# Logs
+*.log

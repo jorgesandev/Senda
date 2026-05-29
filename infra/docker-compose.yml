@@ -1,0 +1,20 @@
+services:
+  api:
+    build:
+      context: ../apps/api
+    ports:
+      - "8080:8080"
+    environment:
+      VALHALLA_URL: http://valhalla:8002
+      VISION_BACKEND: gemini
+    depends_on:
+      - valhalla
+
+  valhalla:
+    image: gisops/valhalla:latest
+    ports:
+      - "8002:8002"
+    volumes:
+      - ../services/valhalla/valhalla.json:/custom_files/valhalla.json:ro
+      - ../services/valhalla/valhalla_tiles:/custom_files/valhalla_tiles
+    command: ["valhalla_service", "/custom_files/valhalla.json", "1"]

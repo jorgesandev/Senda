@@ -1,0 +1,76 @@
+[
+  {
+    "id": "route-centro-zona-rio",
+    "kind": "transport",
+    "categoria": "ruta_camion",
+    "subtipo": "Centro - Zona Rio",
+    "atributos": {
+      "accessibility_features": {
+        "has_ramp": true,
+        "low_floor": true,
+        "wheelchair_space": true,
+        "visual_announcements": true
+      }
+    },
+    "lat": 32.525,
+    "lng": -117.025,
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [[-117.0382, 32.5331], [-117.0191, 32.5225]]
+    },
+    "source": "ciudadano",
+    "confidence": 0.8,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 4,
+    "created_at": "2026-05-29T12:08:00.000Z"
+  },
+  {
+    "id": "route-otay-centro",
+    "kind": "transport",
+    "categoria": "ruta_camion",
+    "subtipo": "Otay - Centro",
+    "atributos": {
+      "accessibility_features": {
+        "priority_seat": true,
+        "visual_announcements": true
+      }
+    },
+    "lat": 32.534,
+    "lng": -117.006,
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [[-116.9701, 32.5339], [-117.0382, 32.5331]]
+    },
+    "source": "ciudadano",
+    "confidence": 0.72,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 2,
+    "created_at": "2026-05-29T12:09:00.000Z"
+  },
+  {
+    "id": "route-playas-centro",
+    "kind": "transport",
+    "categoria": "ruta_camion",
+    "subtipo": "Playas - Centro",
+    "atributos": {
+      "accessibility_features": {
+        "wheelchair_space": true,
+        "audio_announcements": true
+      }
+    },
+    "lat": 32.522,
+    "lng": -117.078,
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [[-117.1202, 32.5076], [-117.0382, 32.5331]]
+    },
+    "source": "ciudadano",
+    "confidence": 0.7,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 5,
+    "created_at": "2026-05-29T12:10:00.000Z"
+  }
+]

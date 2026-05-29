@@ -1,0 +1,80 @@
+[
+  {
+    "id": "seed-centro-ramp-001",
+    "kind": "barrier",
+    "categoria": "cambio_nivel",
+    "subtipo": "ramp_missing",
+    "atributos": {
+      "esquina": "Av. Revolucion y Calle 4ta"
+    },
+    "lat": 32.5331,
+    "lng": -117.0382,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.86,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 7,
+    "created_at": "2026-05-29T12:00:00.000Z"
+  },
+  {
+    "id": "seed-zona-rio-rest-001",
+    "kind": "amenity",
+    "categoria": "alivio",
+    "subtipo": "rest_point",
+    "atributos": {
+      "sombra": true,
+      "banca": true
+    },
+    "lat": 32.5225,
+    "lng": -117.0191,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.91,
+    "photo_url": null,
+    "status": "confirmado",
+    "upvotes": 12,
+    "created_at": "2026-05-29T12:02:00.000Z"
+  },
+  {
+    "id": "seed-otay-cross-001",
+    "kind": "crossing",
+    "categoria": "cruce",
+    "subtipo": "crossing_no_audio",
+    "atributos": {
+      "tiene_audio": false,
+      "tiene_conteo": true,
+      "rampas_esquina": true
+    },
+    "lat": 32.5339,
+    "lng": -116.9701,
+    "geometry": null,
+    "source": "auto",
+    "confidence": 0.74,
+    "photo_url": null,
+    "status": "no_confirmado",
+    "upvotes": 3,
+    "created_at": "2026-05-29T12:05:00.000Z"
+  },
+  {
+    "id": "seed-centro-stop-001",
+    "kind": "transport",
+    "categoria": "parada",
+    "subtipo": "Parada Centro",
+    "atributos": {
+      "accessibility_features": {
+        "has_ramp": true,
+        "visual_announcements": true
+      }
+    },
+    "lat": 32.532,
+    "lng": -117.037,
+    "geometry": null,
+    "source": "ciudadano",
+    "confidence": 0.7,
+    "photo_url": null,
+    "status": "activo",
+    "upvotes": 2,
+    "created_at": "2026-05-29T12:07:00.000Z"
+  }
+]

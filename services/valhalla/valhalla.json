@@ -1,0 +1,31 @@
+{
+  "mjolnir": {
+    "tile_dir": "/custom_files/valhalla_tiles",
+    "tile_extract": "/custom_files/valhalla_tiles.tar",
+    "timezone": "/custom_files/tz_world.sqlite",
+    "admin": "/custom_files/admins.sqlite"
+  },
+  "loki": {
+    "actions": ["locate", "route", "sources_to_targets", "isochrone"],
+    "use_connectivity": false
+  },
+  "thor": {
+    "max_reserved_labels_count_astar": 1000000,
+    "source_to_target_algorithm": "select_optimal"
+  },
+  "service_limits": {
+    "auto": {
+      "max_distance": 500000
+    },
+    "pedestrian": {
+      "max_distance": 50000,
+      "max_locations": 50
+    }
+  },
+  "httpd": {
+    "service": {
+      "listen": "tcp://0.0.0.0:8002",
+      "loopback": "ipc:///tmp/valhalla"
+    }
+  }
+}

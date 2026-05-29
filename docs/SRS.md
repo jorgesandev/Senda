@@ -4,7 +4,7 @@
 Equipo Entropyc · HackFox 2026 · Track *Tijuana Sin Barreras*
 Autores: Bernardo Morales ([bernardmora.github.io](https://bernardmora.github.io)) · Jorge Sandoval ([jorgesandoval.dev](https://jorgesandoval.dev))
 
-> Define la **versión ideal final ("insana")** de Senda como meta. Cada requerimiento lleva prioridad: **P0** núcleo demoable garantizado · **P1** ideal · **P2** stretch. Sirve como especificación y mapa de priorización. No construir nada fuera de aquí sin actualizar el SRS. Convención de código: nunca comentarios TODO; lógica no implementada usa `NotImplementedError` (Python) o mocks tipados (TS), y el pendiente vive en `docs/IMPLEMENTATION_CHECKLIST.md`.
+> Define la **versión ideal final ("insana")** de Senda como meta. Cada requerimiento lleva prioridad: **P0** núcleo demoable garantizado · **P1** ideal · **P2** stretch. Sirve como especificación y mapa de priorización. No construir nada fuera de aquí sin actualizar el SRS. Convención de código: nunca comentarios de pendientes; lógica no implementada usa `NotImplementedError` (Python) o mocks tipados (TS), y el pendiente vive en `docs/IMPLEMENTATION_CHECKLIST.md`.
 
 > **Qué cambió vs v1:** modelo de perfiles funcionales combinables, taxonomía de barreras expandida en 7 categorías, entidad unificada `MapFeature` con 4 `kind` (barrier/amenity/transport/crossing), matriz de impacto por perfil (reemplaza el COST_TABLE simple), reportes con 3 destinos, y accesibilidad de la app elevada a diferenciador central (voz, narrator, háptica, auto-preferencias).
 
@@ -29,7 +29,7 @@ Se modelan **necesidades funcionales, no diagnósticos**. Un usuario selecciona 
 | Audición | `DEAF_HOH` | sordera, hipoacusia | (app-side: alertas visuales/hápticas); en transporte: avisos visuales |
 | Cognición | `COGNITIVE` | TEA, discapacidad intelectual, demencia | rutas simples y predecibles, bajo caos sensorial |
 
-**Multiplicadores situacionales** (no son discapacidad; amplían la base de impacto a ~todos): `STROLLER` (carriola → se comporta como `WHEELCHAIR` atenuado) · `TEMP_INJURY` (lesión/yeso → como `REDUCED_MOB`). No son columnas nuevas en la matriz: se mapean a un perfil existente con un factor de atenuación.
+**Multiplicadores situacionales** (no son discapacidad; amplían la base de impacto a casi cualquier usuario): `STROLLER` (carriola → se comporta como `WHEELCHAIR` atenuado) · `TEMP_INJURY` (lesión/yeso → como `REDUCED_MOB`). No son columnas nuevas en la matriz: se mapean a un perfil existente con un factor de atenuación.
 
 **Regla de combinación multi-perfil (lógica de negocio crítica):** para un usuario con varios perfiles, el efecto de cada segmento es el **peor caso** entre sus perfiles — cualquier `BLOQUEO` en algún perfil bloquea; si no, se toma la penalización máxima. Default seguro para accesibilidad.
 
@@ -37,7 +37,7 @@ Se modelan **necesidades funcionales, no diagnósticos**. Un usuario selecciona 
 
 ## 3. Features del mapa: la entidad unificada `MapFeature`
 
-Todo lo que vive en el mapa es un `MapFeature` con cuatro `kind`. Encapsula sin sobre-abstraer: concreto para que un ciudadano reporte "escalón", abstracto para que la matriz escale.
+Cada elemento que vive en el mapa es un `MapFeature` con cuatro `kind`. Encapsula sin sobre-abstraer: concreto para que un ciudadano reporte "escalón", abstracto para que la matriz escale.
 
 ```
 MapFeature {
@@ -106,7 +106,7 @@ Tabla de **configuración, no código**. Para barreras: **B**=bloqueo · **D**=d
 | `crossing` sin audio | · | · | B | L | · | L |
 | `crossing` sin rampa esquina | B | L | · | · | · | · |
 
-**Amenidades** (al revés): **CLAVE** / **ÚTIL** / **·**. Ej: `elevator`→WHEEL/REDUC CLAVE; `accessible_restroom`→WHEEL CLAVE, REDUC ÚTIL; `rest_point`→REDUC CLAVE, resto ÚTIL; `tactile_present`/`audio_signal_present`→BLIND CLAVE, LOWVIS ÚTIL; `accessible_business`→todos ÚTIL.
+**Amenidades** (al revés): **CLAVE** / **ÚTIL** / **·**. Ej: `elevator`→WHEEL/REDUC CLAVE; `accessible_restroom`→WHEEL CLAVE, REDUC ÚTIL; `rest_point`→REDUC CLAVE, resto ÚTIL; `tactile_present`/`audio_signal_present`→BLIND CLAVE, LOWVIS ÚTIL; `accessible_business`→cada perfil ÚTIL.
 
 **Traducción al motor (Valhalla):** `B`→`exclude_locations` (caliente) + tag duro tipo `wheelchair=no` (frío) · `D`→penalización alta · `L`→penalización baja · `·`→sin efecto. Amenidades restan costo (incentivan pasar por ahí). Esto es el `COST_TABLE` de v1 extendido a todas las columnas.
 
@@ -139,7 +139,7 @@ Una ruta/parada recibe un score por perfil derivado de sus `accessibility_featur
 
 ---
 
-## 6. Accesibilidad de la app (el diferenciador — esto se construye para TODOS)
+## 6. Accesibilidad de la app (el diferenciador — se construye para cada persona)
 
 La cuña competitiva: **los demás equipos harán un ruteador para silla de ruedas que un ciego no puede ni abrir.** Senda se opera sin ver y sin tocar texto chico. Separar accesibilidad *de la app* (UI/UX) de datos *de ruteo* (matriz).
 
@@ -180,7 +180,7 @@ Variante alto contraste: bloque `[data-contrast="high"]` que sobreescribe los va
 ---
 
 ## 9. Inventario de componentes
-`AppHeader` · `ProfileSelector` (multi) · `ProfileChip` · `MapView` (MapLibre) · `FeatureMarker` (icono+color por kind/severidad) · `RoutePlanner` · `LocationInput` · `RouteResultCard` · `StepList` · `VoiceController` (comandos+TTS) · `HapticController` · `ReportSheet` · `KindSelector` · `CameraCapture` · `ClassificationResult` · `LiveRerouteToast` · `CompassGuide` · `BottomNav` · `Fab` · `AccessibilityControls` · `Toast` · `LoadingState` · `EmptyState` · `GovHeatmap` · `PrioritizationTable` · `ExportButton`. Todos tipados, con estados carga/vacío/error, navegables por teclado y con ARIA.
+`AppHeader` · `ProfileSelector` (multi) · `ProfileChip` · `MapView` (MapLibre) · `FeatureMarker` (icono+color por kind/severidad) · `RoutePlanner` · `LocationInput` · `RouteResultCard` · `StepList` · `VoiceController` (comandos+TTS) · `HapticController` · `ReportSheet` · `KindSelector` · `CameraCapture` · `ClassificationResult` · `LiveRerouteToast` · `CompassGuide` · `BottomNav` · `Fab` · `AccessibilityControls` · `Toast` · `LoadingState` · `EmptyState` · `GovHeatmap` · `PrioritizationTable` · `ExportButton`. Componentes tipados, con estados carga/vacío/error, navegables por teclado y con ARIA.
 
 ---
 
@@ -240,12 +240,12 @@ Bun (PM/runtime web) · Next.js 14 App Router + TS + Tailwind (PWA) · MapLibre 
 
 ## 13. Requerimientos no funcionales
 
-**Accesibilidad (crítico):** WCAG 2.1 AA mínimo, contraste texto AAA (≥7:1) · navegación por teclado con foco visible · ARIA en todo interactivo, compatible con lector de pantalla · color nunca único canal · targets ≥48px, texto a 200% · alto contraste y `prefers-reduced-motion` · operable 100% por voz · objetivo **Lighthouse a11y = 100** (mostrado en slide).
+**Accesibilidad (crítico):** WCAG 2.1 AA mínimo, contraste texto AAA (≥7:1) · navegación por teclado con foco visible · ARIA en cada elemento interactivo, compatible con lector de pantalla · color nunca único canal · targets ≥48px, texto a 200% · alto contraste y `prefers-reduced-motion` · operable 100% por voz · objetivo **Lighthouse a11y = 100** (mostrado en slide).
 **Rendimiento:** ruta <1.5 s · clasificación <4 s (Gemini) · re-ruteo Citizen Loop percibido <1 s · carga PWA <3 s en 4G.
 **Resiliencia:** cada servicio propietario con fallback abierto · degradación elegante si falla visión (guarda sin clasificar, reclasifica después) · ciudad ruteable aunque el scan no cubra.
 **Privacidad:** reportes anónimos por defecto, sin PII obligatoria · consentimiento de ubicación · fotos sin metadatos sensibles, sin rostros/placas (desenfoque P2).
 **Escalabilidad:** soporta toda Tijuana; ruta de migración a más municipios documentada.
-**Localización:** es-MX primario (UI y voz). **Mantenibilidad:** formatos estándar (GeoJSON/OSM), monorepo tipado, sin lock-in. **Portabilidad:** todo dockerizable / auto-hospedable.
+**Localización:** es-MX primario (UI y voz). **Mantenibilidad:** formatos estándar (GeoJSON/OSM), monorepo tipado, sin lock-in. **Portabilidad:** stack dockerizable / auto-hospedable.
 
 ---
 

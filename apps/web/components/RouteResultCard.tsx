@@ -1,0 +1,36 @@
+import { Clock, Route } from 'lucide-react'
+import { StepList } from './StepList'
+import type { RouteResponse } from '@/lib/types'
+
+export function RouteResultCard({ route }: { route: RouteResponse }) {
+  return (
+    <section className="panel space-y-4 p-4" aria-labelledby="route-result-title">
+      <h2 id="route-result-title" className="flex items-center gap-2 text-2xl font-bold">
+        <Route aria-hidden="true" size={24} />
+        Ruta activa
+      </h2>
+      <dl className="grid grid-cols-2 gap-3">
+        <div className="rounded-md bg-surface p-3">
+          <dt className="text-sm text-muted">Distancia</dt>
+          <dd className="font-semibold">{route.distance_m} m</dd>
+        </div>
+        <div className="rounded-md bg-surface p-3">
+          <dt className="flex items-center gap-1 text-sm text-muted">
+            <Clock aria-hidden="true" size={16} />
+            ETA
+          </dt>
+          <dd className="font-semibold">{route.eta_min} min</dd>
+        </div>
+      </dl>
+      <div className="grid gap-2 text-sm">
+        <p>
+          <strong>{route.features_evitadas.length}</strong> barrera evitada
+        </p>
+        <p>
+          <strong>{route.features_aprovechadas.length}</strong> amenidad aprovechada
+        </p>
+      </div>
+      <StepList steps={route.steps} />
+    </section>
+  )
+}
